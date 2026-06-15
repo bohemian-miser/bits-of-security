@@ -100,11 +100,11 @@
   <main class="w-full px-1 py-8 flex-grow flex flex-col justify-center gap-8">
     
     <!-- Header -->
-    <header class="text-center space-y-2">
-      <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+    <header class="text-center space-y-3">
+      <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
         Bits of Security
       </h1>
-      <p class="text-slate-500 max-w-lg mx-auto text-sm sm:text-base">
+      <p class="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">
         Visualize the scale of cryptographic keys. Adjust the brute-force speed to see how long it takes to exhaust the search space.
       </p>
     </header>
@@ -114,7 +114,7 @@
       
       <!-- Key Size Selector (Aligned Right) -->
       <div class="flex items-center justify-end gap-3 mb-6">
-        <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space (in bits)</label>
+        <label for="keysize-select" class="text-sm font-bold uppercase tracking-wider text-slate-500">Key Search Space (in bits)</label>
         <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
           <!-- Dynamic key size buttons with SVG numbers injected here -->
         </div>
@@ -124,8 +124,8 @@
       <div class="w-full select-none">
         <div id="scrollable-content" class="relative w-full mx-auto">
           
-          <!-- The Binary Register Box (Taller height 90px for comfortable fitting) -->
-          <div id="register-box-wrapper" class="relative w-full" style="height: 90px;">
+          <!-- The Binary Register Box (Taller height 120px for comfortable fitting) -->
+          <div id="register-box-wrapper" class="relative w-full" style="height: 120px;">
             <!-- SVG Frame background -->
             <div class="absolute inset-0 w-full h-full text-slate-350 pointer-events-none">
               <svg viewBox="0 0 1006.78 130.08" class="w-full h-full" preserveAspectRatio="none">
@@ -155,12 +155,12 @@
       <!-- Controls -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 space-y-6 flex flex-col justify-between shadow-md">
         <div>
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Simulation Control</h3>
+          <h3 class="text-lg font-bold uppercase tracking-wider text-slate-500 mb-4">Simulation Control</h3>
           
           <div class="space-y-4">
             <!-- Speed Input & Navigation -->
             <div class="flex items-center justify-between gap-4">
-              <label for="speed-input" class="text-sm text-slate-600">Brute Force Speed:</label>
+              <label for="speed-input" class="text-lg font-semibold text-slate-600">Brute Force Speed:</label>
               <div class="flex items-center gap-2">
                 <input 
                   type="number" 
@@ -168,10 +168,10 @@
                   min="0" 
                   max="256" 
                   step="1" 
-                  class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-right w-24 text-sky-600 font-mono focus:outline-none focus:border-sky-500 text-lg"
+                  class="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-right w-28 text-sky-600 font-mono focus:outline-none focus:border-sky-500 text-2xl"
                   value="10"
                 >
-                <span class="text-sm text-slate-500 font-sans">bits / sec</span>
+                <span class="text-lg font-semibold text-slate-500 font-sans">bits / sec</span>
               </div>
             </div>
 
@@ -183,18 +183,18 @@
                 min="0" 
                 max="128" 
                 step="1" 
-                class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
                 value="10"
               >
-              <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+              <div class="flex justify-between text-xs sm:text-sm text-slate-500 font-mono mt-1.5">
                 <span class="flex items-center gap-1">
-                  <span id="slider-label-min"></span> <span class="text-[9px]">bits (1/s)</span>
+                  <span id="slider-label-min"></span> <span class="text-[10px] sm:text-xs">bits (1/s)</span>
                 </span>
                 <span class="flex items-center gap-1">
-                  <span id="slider-label-mid"></span> <span class="text-[9px]">bits (Global Hash)</span>
+                  <span id="slider-label-mid"></span> <span class="text-[10px] sm:text-xs">bits (Global Hash)</span>
                 </span>
                 <span class="flex items-center gap-1">
-                  <span id="slider-label-max"></span> <span class="text-[9px]">bits (AES-128)</span>
+                  <span id="slider-label-max"></span> <span class="text-[10px] sm:text-xs">bits (AES-128)</span>
                 </span>
               </div>
             </div>
@@ -202,18 +202,18 @@
 
           <!-- Presets -->
           <div class="mt-6 space-y-2">
-            <span class="text-xs text-slate-400 block font-semibold">Real-World Comparisons:</span>
+            <span class="text-sm sm:text-base text-slate-500 block font-bold">Real-World Comparisons:</span>
             <div id="presets-container" class="grid grid-cols-2 gap-2">
               <!-- Dynamically filled with SVG descriptions -->
             </div>
           </div>
         </div>
 
-        <div class="flex gap-3 mt-6 pt-4 border-t border-slate-100">
-          <button id="btn-reset" class="flex-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition">
+        <div class="flex gap-4 mt-6 pt-4 border-t border-slate-100">
+          <button id="btn-reset" class="flex-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-5 py-3 rounded-xl font-bold text-base transition shadow-sm">
             Reset Counter
           </button>
-          <button id="btn-toggle-play" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition">
+          <button id="btn-toggle-play" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-3 rounded-xl font-bold text-base transition shadow-sm">
             Pause
           </button>
         </div>
@@ -222,44 +222,44 @@
       <!-- Stats Panel -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-md">
         <div class="space-y-6">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Simulation Statistics</h3>
+          <h3 class="text-lg font-bold uppercase tracking-wider text-slate-500">Simulation Statistics</h3>
 
           <!-- Stat: Guesses/Sec (Clean 2^X = Y formatting) -->
-          <div class="space-y-1">
-            <span class="text-xs text-slate-500 block font-medium">Guesses per second</span>
-            <div id="stat-guesses-rate" class="text-2xl font-bold font-mono text-sky-600 h-8 flex items-center">
+          <div class="space-y-1.5">
+            <span class="text-sm sm:text-base font-bold text-slate-500 block">Guesses per second</span>
+            <div id="stat-guesses-rate" class="text-3xl font-bold font-mono text-sky-600 h-10 flex items-center">
               <!-- Inline SVG rate e.g. 2^10 = 1,024 -->
             </div>
           </div>
 
           <!-- Stat: Keyspace Size -->
-          <div class="space-y-1">
-            <span class="text-xs text-slate-500 block font-medium">Total Search Space Size</span>
-            <div id="stat-keyspace-size" class="text-lg font-bold font-mono flex items-center text-slate-800" style="height: 24px;">
+          <div class="space-y-1.5">
+            <span class="text-sm sm:text-base font-bold text-slate-500 block">Total Search Space Size</span>
+            <div id="stat-keyspace-size" class="text-xl font-bold font-mono flex items-center text-slate-800" style="height: 32px;">
               <!-- Inline SVG -->
             </div>
-            <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+            <div class="text-xs sm:text-sm text-slate-500 flex items-center gap-1 mt-0.5 font-medium">
               <span>Total combinations for</span>
-              <span id="stat-keyspace-bits" class="inline-block" style="height: 14px;"></span>
+              <span id="stat-keyspace-bits" class="inline-block" style="height: 20px;"></span>
               <span>bits of security.</span>
             </div>
           </div>
 
           <!-- Stat: Time to Exhaust -->
-          <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1 shadow-inner">
-            <span class="text-xs text-slate-500 block font-medium">Average Time to Find Key (50% Space)</span>
-            <div id="stat-time-average" class="text-xl font-bold font-mono text-amber-600 flex items-center" style="height: 26px;">
+          <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-1.5 shadow-inner">
+            <span class="text-sm sm:text-base font-bold text-slate-500 block">Average Time to Find Key (50% Space)</span>
+            <div id="stat-time-average" class="text-2xl font-bold font-mono text-amber-600 flex items-center" style="height: 36px;">
               <!-- Inline SVG -->
             </div>
-            <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
+            <div class="text-xs sm:text-sm text-slate-450 flex items-center gap-1 mt-1 font-medium">
               <span>Time to search 100% of keyspace:</span>
-              <span id="stat-time-full" class="font-mono text-slate-500 flex items-center" style="height: 16px;"></span>
+              <span id="stat-time-full" class="font-mono text-slate-500 flex items-center" style="height: 24px;"></span>
             </div>
           </div>
         </div>
 
-        <div class="text-[11px] text-slate-400 mt-6 leading-relaxed">
-          <span class="text-sky-600 font-semibold">Tip:</span> Hold the <span class="bg-slate-200 px-1 py-0.5 rounded text-slate-700">▲ Arrow Up</span> or <span class="bg-slate-200 px-1 py-0.5 rounded text-slate-700">▼ Arrow Down</span> keys anywhere on the page to change the brute-force speed smoothly.
+        <div class="text-xs sm:text-sm text-slate-455 mt-6 leading-relaxed">
+          <span class="text-sky-600 font-bold">Tip:</span> Hold the <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono font-semibold">▲ Arrow Up</span> or <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono font-semibold">▼ Arrow Down</span> keys anywhere on the page to change the brute-force speed smoothly.
         </div>
       </div>
 
@@ -368,14 +368,14 @@
 
     // Render an exponent label (e.g. 2^63)
     function createExponentLabelHTML(exp) {
-      let html = `<div class="flex items-start text-slate-400 select-none scale-95 mb-1">`;
+      let html = `<div class="flex items-start text-slate-400 select-none scale-95 mb-1.5">`;
       // Base '2'
-      html += `<svg class="aspect-[55/90] text-slate-400" style="height:14px;" viewBox="0 -10 55 110"><use href="#digit-2" /></svg>`;
+      html += `<svg class="aspect-[55/90] text-slate-400" style="height:20px;" viewBox="0 -10 55 110"><use href="#digit-2" /></svg>`;
       // Exponent digits
-      html += `<div class="flex scale-75 -translate-y-1.5 -ml-0.5">`;
+      html += `<div class="flex scale-75 -translate-y-2 -ml-0.5">`;
       const expStr = exp.toString();
       for (let i = 0; i < expStr.length; i++) {
-        html += `<svg class="aspect-[55/90] text-slate-450" style="height:14px;" viewBox="0 -10 55 110"><use href="#digit-${expStr[i]}" /></svg>`;
+        html += `<svg class="aspect-[55/90] text-slate-450" style="height:20px;" viewBox="0 -10 55 110"><use href="#digit-${expStr[i]}" /></svg>`;
       }
       html += `</div></div>`;
       return html;
@@ -383,15 +383,15 @@
 
     // Render a power of 10 label (e.g. 10^3)
     function create10ExponentLabelHTML(exp) {
-      let html = `<div class="flex items-start text-emerald-600 select-none scale-75 mt-0.5">`;
+      let html = `<div class="flex items-start text-emerald-600 select-none scale-75 mt-1">`;
       // Base '10'
-      html += `<svg class="aspect-[55/90] text-emerald-600" style="height:13px;" viewBox="0 -10 55 110"><use href="#digit-1" /></svg>`;
-      html += `<svg class="aspect-[55/90] text-emerald-600" style="height:13px;" viewBox="0 -10 55 110"><use href="#digit-0" /></svg>`;
+      html += `<svg class="aspect-[55/90] text-emerald-600" style="height:18px;" viewBox="0 -10 55 110"><use href="#digit-1" /></svg>`;
+      html += `<svg class="aspect-[55/90] text-emerald-600" style="height:18px;" viewBox="0 -10 55 110"><use href="#digit-0" /></svg>`;
       // Exponent
       html += `<div class="flex scale-75 -translate-y-1.5 -ml-0.5">`;
       const expStr = exp.toString();
       for (let i = 0; i < expStr.length; i++) {
-        html += `<svg class="aspect-[55/90] text-emerald-500" style="height:13px;" viewBox="0 -10 55 110"><use href="#digit-${expStr[i]}" /></svg>`;
+        html += `<svg class="aspect-[55/90] text-emerald-500" style="height:18px;" viewBox="0 -10 55 110"><use href="#digit-${expStr[i]}" /></svg>`;
       }
       html += `</div></div>`;
       return html;
@@ -452,18 +452,18 @@
       ];
 
       container.innerHTML = presets.map((p, idx) => {
-        const svgVal = createSVGStringHTML(p.valText, 'h-3 text-sky-600');
+        const svgVal = createSVGStringHTML(p.valText, 'h-4.5 text-sky-600');
         const bitVal = Math.round(p.speed).toString();
-        const svgBits = createSVGStringHTML(bitVal, 'h-3 text-slate-500');
+        const svgBits = createSVGStringHTML(bitVal, 'h-3.5 text-slate-500');
         
         return `
-          <button onclick="setSpeed(${p.speed})" class="text-left text-xs bg-white hover:bg-slate-50 border border-slate-200 shadow-sm px-3 py-2 rounded-lg text-slate-800 transition">
-            <strong class="block text-[10px] text-slate-400 font-bold">${p.title}</strong>
-            <span class="flex items-center flex-wrap gap-1 mt-0.5">
+          <button onclick="setSpeed(${p.speed})" class="text-left text-sm bg-white hover:bg-slate-50 border border-slate-200 shadow-md px-4 py-2.5 rounded-xl text-slate-800 transition flex flex-col justify-between">
+            <strong class="block text-[11px] text-slate-455 font-bold">${p.title}</strong>
+            <span class="flex items-center flex-wrap gap-1.5 mt-1">
               ${svgVal} 
-              <span class="text-[10px] text-slate-500 font-sans">${p.unitText.split('(')[0]}</span>
-              <span class="text-[9px] text-slate-400 font-sans flex items-center">
-                (${svgBits} <span class="ml-0.5">bits</span>)
+              <span class="text-[11px] text-slate-600 font-sans font-medium">${p.unitText.split('(')[0]}</span>
+              <span class="text-[10px] text-slate-450 font-sans flex items-center">
+                (${svgBits} <span class="ml-0.5 font-medium">bits</span>)
               </span>
             </span>
           </button>
@@ -490,8 +490,8 @@
         const activeClass = isActive 
           ? "border-sky-500/30 bg-sky-50/80 text-sky-600 z-10" 
           : "border-slate-200 bg-white hover:bg-slate-50 text-slate-600";
-        const svgSize = createSVGStringHTML(size.toString(), 'h-3 inline-block ' + (isActive ? 'text-sky-600' : 'text-slate-400'));
-        return `<button type="button" onclick="setKeySize(${size})" id="btn-keysize-${size}" class="px-3 py-1.5 text-xs flex items-center border transition first:rounded-l-lg last:rounded-r-lg ${activeClass}">
+        const svgSize = createSVGStringHTML(size.toString(), 'h-5 inline-block ' + (isActive ? 'text-sky-600' : 'text-slate-400'));
+        return `<button type="button" onclick="setKeySize(${size})" id="btn-keysize-${size}" class="px-4 py-2 text-sm flex items-center border transition first:rounded-l-lg last:rounded-r-lg ${activeClass}">
           ${svgSize}
         </button>`;
       }).join('');
@@ -523,7 +523,7 @@
         
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 -10 55 110'); // Unified height, Y shifted down inside defs
-        svg.className = 'digit-svg w-full h-full max-h-10 max-w-[28px] val-0';
+        svg.className = 'digit-svg w-full h-full max-h-14 max-w-[40px] val-0';
         svg.id = `bit-svg-${i}`;
         
         const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
@@ -536,35 +536,35 @@
 
         // 2. Create label column block for labelsContainer (Outside / below box)
         const labelCol = document.createElement('div');
-        labelCol.className = "group flex flex-col items-center flex-grow flex-shrink basis-0 text-[10px] select-none text-slate-400 font-mono text-center relative";
+        labelCol.className = "group flex flex-col items-center flex-grow flex-shrink basis-0 text-sm select-none text-slate-400 font-mono text-center relative";
         
         // Row 1: Exponent (Statically visible)
         if (i % labelInterval === 0 || i === 0) {
           labelCol.innerHTML = createExponentLabelHTML(i);
         } else {
           const emptyExponent = document.createElement('div');
-          emptyExponent.className = "h-[18px]";
+          emptyExponent.className = "h-[26px]";
           labelCol.appendChild(emptyExponent);
         }
 
         // Row 2: 10^K scale marker (Statically visible)
         if (pow10Map[i] !== undefined) {
           const pow10Div = document.createElement('div');
-          pow10Div.className = "mt-0.5 flex justify-center w-full";
+          pow10Div.className = "mt-1 flex justify-center w-full";
           pow10Div.innerHTML = create10ExponentLabelHTML(pow10Map[i]);
           labelCol.appendChild(pow10Div);
         } else {
           const empty = document.createElement('div');
-          empty.className = "h-4 w-full";
+          empty.className = "h-[24px] w-full";
           labelCol.appendChild(empty);
         }
 
         // Row 3: Hover Tooltip (Full HORIZONTAL value floats on mouseover)
         const valStr = formatExponentValue(i);
         const tooltip = document.createElement('div');
-        tooltip.className = "absolute top-[28px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-xl rounded px-2.5 py-1.5 z-30 pointer-events-none text-slate-800 font-bold flex items-center";
+        tooltip.className = "absolute top-[36px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-xl rounded px-3 py-2 z-30 pointer-events-none text-slate-800 font-bold flex items-center";
         // Rendered as horizontal SVG string!
-        tooltip.innerHTML = createSVGStringHTML(valStr, 'h-4 text-slate-800');
+        tooltip.innerHTML = createSVGStringHTML(valStr, 'h-6 text-slate-800');
         labelCol.appendChild(tooltip);
 
         labelsContainer.appendChild(labelCol);
@@ -744,7 +744,7 @@
           
           if (useEl && svgEl) {
             useEl.setAttribute('href', `#digit-${bitVal}`);
-            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-10 max-w-[28px] val-${bitVal}`);
+            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-14 max-w-[40px] val-${bitVal}`);
           }
           prevBits[i] = cacheKey;
         }
