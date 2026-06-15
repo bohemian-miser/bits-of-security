@@ -12,13 +12,11 @@
     }
     /* Style for 0 in light theme */
     .val-0 {
-      fill: #0284c7; /* sky-600 */
-      filter: drop-shadow(0 0 2px rgba(2, 132, 199, 0.2));
+      fill: #000000;
     }
     /* Style for 1 in light theme */
     .val-1 {
-      fill: #059669; /* emerald-600 */
-      filter: drop-shadow(0 0 3px rgba(5, 150, 105, 0.3));
+      fill: #000000;
     }
     .spinning {
       filter: none !important;
@@ -243,7 +241,7 @@
                   max="256" 
                   step="1" 
                   class="bg-slate-50 border border-slate-200 rounded-lg px-6 py-4 text-right w-44 text-sky-600 font-mono focus:outline-none focus:border-sky-500 text-5xl"
-                  value="10"
+                  value="1"
                 >
                 <span class="text-2xl font-bold text-slate-655 font-sans">bits / sec</span>
               </div>
@@ -264,7 +262,7 @@
                 max="128" 
                 step="1" 
                 class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
-                value="10"
+                value="1"
               >
               <div class="flex justify-between text-base sm:text-xl text-slate-650 mt-3 font-mono">
                 <span class="flex items-center gap-1">
@@ -322,8 +320,8 @@
   <!-- Script logic -->
   <script>
     // Configuration & State
-    let numBits = 64; // Default bits
-    let speed = 10;   // Default speed in bits/sec (integer snapped)
+    let numBits = 32; // Default bits
+    let speed = 1;   // Default speed in bits/sec (integer snapped)
     let isPlaying = true;
     let displayMode = 'binary'; // 'binary', 'hex', 'decimal'
 
@@ -478,7 +476,7 @@
       document.getElementById('slider-label-max').innerHTML = createSVGStringHTML('128', 'h-4 text-slate-400');
 
       renderPresets();
-      setKeySize(64); // Default
+      setKeySize(32); // Default
       updateSpeedControls();
       
       // Event Listeners
