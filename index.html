@@ -21,25 +21,22 @@
       filter: drop-shadow(0 0 3px rgba(5, 150, 105, 0.3));
     }
     .spinning {
-      filter: blur(2px) opacity(0.6) !important;
-    }
-    .vertical-digit-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      /* Capped flickering doesn't need blur animation, but we keep it just in case */
+      filter: none !important;
+      opacity: 1 !important;
     }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans selection:bg-emerald-100">
 
-  <!-- SVG Sprite Definitions (Hidden, Shifted down and centered) -->
+  <!-- SVG Sprite Definitions (Hidden, Shifted down and scaled for uniform sizing) -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <!-- Digit 0 -->
+    <!-- Digit 0 (translated lower) -->
     <g id="digit-0" transform="translate(6, 12)">
       <path d="M17.1,6.52C6.52,12.23,1.14,23.32.16,35c-.93,11.09,2,26.65,12,33.22,12.18,8,25.55-3.47,30.88-14.19,6.39-12.84,8.33-29.94,2.34-43.32C38.31-5.2,20.35-1.5,10.56,9.6,8,12.49,12.24,16.75,14.8,13.85,19,9,26,4,32.79,6,40.12,8.22,42,17.82,42.65,24.4,43.91,37.67,40,55.74,27.44,62.87,13,71.07,6.41,51.13,6,40.22,5.65,28.92,9.74,17.3,20.13,11.7c3.4-1.83.37-7-3-5.18Z"/>
     </g>
-    <!-- Digit 1 (translated down to align center with 0) -->
-    <g id="digit-1" transform="translate(23, 15)">
+    <!-- Digit 1 (scaled vertically by 1.28 and translated to align perfectly with 0) -->
+    <g id="digit-1" transform="translate(23, 3) scale(1, 1.28)">
       <path d="M2.38,2.9A447.69,447.69,0,0,1,0,62.44c-.41,3.83,5.59,3.81,6,0A447.69,447.69,0,0,0,8.38,2.9c-.1-3.85-6.1-3.87-6,0Z"/>
     </g>
     <!-- Digit 2 -->
@@ -112,10 +109,10 @@
       </p>
     </header>
 
-    <!-- Visualizer Section (Full Width, No Scroll) -->
+    <!-- Visualizer Section -->
     <section class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl">
       
-      <!-- Key Size Selector -->
+      <!-- Key Size Selector (Aligned Right) -->
       <div class="flex items-center justify-end gap-3 mb-6">
         <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space (in bits)</label>
         <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
@@ -127,8 +124,8 @@
       <div class="w-full select-none">
         <div id="scrollable-content" class="relative w-full mx-auto">
           
-          <!-- The Binary Register Box (Squished to height 80px) -->
-          <div id="register-box-wrapper" class="relative w-full" style="height: 80px;">
+          <!-- The Binary Register Box (Taller height 90px for comfortable fitting) -->
+          <div id="register-box-wrapper" class="relative w-full" style="height: 90px;">
             <!-- SVG Frame background -->
             <div class="absolute inset-0 w-full h-full text-slate-350 pointer-events-none">
               <svg viewBox="0 0 1006.78 130.08" class="w-full h-full" preserveAspectRatio="none">
@@ -292,6 +289,7 @@
 
     // Simulation math variables
     let lastTime = performance.now();
+    let flickerTime = 0; // Accumulated milliseconds that freeze when paused
     
     // Scale factor to support fractional speed and sub-bit precision via BigInt fixed-point
     const SCALE_SHIFT = 32n;
@@ -364,23 +362,6 @@
         }
       }
       
-      html += `</div>`;
-      return html;
-    }
-
-    // Render a number vertically (used for hover-overs under the register)
-    function createVerticalSVGNumberHTML(str, heightStyleStr = 'height:8px;') {
-      let html = `<div class="vertical-digit-container">`;
-      for (let i = 0; i < str.length; i++) {
-        const char = str[i];
-        if (char >= '0' && char <= '9') {
-          html += `<svg class="aspect-[55/90] text-current" style="${heightStyleStr}" viewBox="0 -10 55 110"><use href="#digit-${char}" /></svg>`;
-        } else if (char === '.') {
-          html += `<svg class="aspect-[55/90] text-current" style="${heightStyleStr}" viewBox="0 -10 55 110"><use href="#sym-dot" /></svg>`;
-        } else if (char === 'e' || char === 'E') {
-          html += `<span class="text-[7px] font-bold my-0.5 text-slate-400">E</span>`;
-        }
-      }
       html += `</div>`;
       return html;
     }
@@ -524,7 +505,6 @@
       // Setup dynamic pow10 mapping
       const pow10Map = {};
       const maxPower = Math.floor(numBits * 0.30103);
-      // Interval to prevent overlap on dense screens
       const pow10Interval = numBits <= 64 ? 1 : (numBits <= 128 ? 3 : 6);
       for (let y = pow10Interval; y <= maxPower; y += pow10Interval) {
         const bitIdx = Math.round(y * 3.321928);
@@ -534,21 +514,15 @@
       }
       
       const labelInterval = numBits <= 32 ? 1 : (numBits <= 64 ? 2 : (numBits <= 128 ? 8 : 16));
-      // Make hover labels smaller on 128-bit/256-bit
-      const labelHeightStyleStr = numBits <= 32 ? 'height:10px;' : (numBits <= 64 ? 'height:8px;' : (numBits <= 128 ? 'height:7px;' : 'height:5px;'));
 
       // Loop from MSB to LSB (left to right)
       for (let i = numBits - 1; i >= 0; i--) {
-        // Create full height column block to keep layout strictly vertical
-        const col = document.createElement('div');
-        col.className = "group flex flex-col items-center flex-grow flex-shrink basis-0 relative";
-        
-        // Inside Box: Digit Wrapper
-        const digitWrap = document.createElement('div');
-        digitWrap.className = "w-full h-12 flex items-center justify-center relative";
+        // 1. Create digit column block for registerGrid (Inside long box)
+        const digitCol = document.createElement('div');
+        digitCol.className = "flex flex-col items-center flex-grow flex-shrink basis-0 h-full justify-center";
         
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('viewBox', '0 -10 55 110'); // Digit centers shifted down inside defs
+        svg.setAttribute('viewBox', '0 -10 55 110'); // Unified height, Y shifted down inside defs
         svg.className = 'digit-svg w-full h-full max-h-10 max-w-[28px] val-0';
         svg.id = `bit-svg-${i}`;
         
@@ -557,20 +531,17 @@
         use.id = `bit-use-${i}`;
         
         svg.appendChild(use);
-        digitWrap.appendChild(svg);
-        col.appendChild(digitWrap);
-        
-        registerGrid.appendChild(col);
+        digitCol.appendChild(svg);
+        registerGrid.appendChild(digitCol);
 
-        // Labels Container Column
+        // 2. Create label column block for labelsContainer (Outside / below box)
         const labelCol = document.createElement('div');
-        labelCol.className = "flex flex-col items-center w-full mt-2";
+        labelCol.className = "group flex flex-col items-center flex-grow flex-shrink basis-0 text-[10px] select-none text-slate-400 font-mono text-center relative";
         
         // Row 1: Exponent (Statically visible)
         if (i % labelInterval === 0 || i === 0) {
           labelCol.innerHTML = createExponentLabelHTML(i);
         } else {
-          // dot marker
           const dot = document.createElement('div');
           dot.className = "w-1 h-1 rounded-full bg-slate-300 my-1.5";
           labelCol.appendChild(dot);
@@ -583,37 +554,22 @@
           pow10Div.innerHTML = create10ExponentLabelHTML(pow10Map[i]);
           labelCol.appendChild(pow10Div);
         } else {
-          // Empty spacing
           const empty = document.createElement('div');
           empty.className = "h-4 w-full";
           labelCol.appendChild(empty);
         }
 
-        // Row 3: Hover Tooltip (Full vertical value floats above exponents on mouseover)
+        // Row 3: Hover Tooltip (Full HORIZONTAL value floats on mouseover)
         const valStr = formatExponentValue(i);
         const tooltip = document.createElement('div');
-        // Float box style
-        tooltip.className = "absolute top-[52px] opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-lg rounded px-1.5 py-1 z-30 pointer-events-none";
-        tooltip.innerHTML = createVerticalSVGNumberHTML(valStr, labelHeightStyleStr);
-        col.appendChild(tooltip);
-        
-        col.appendChild(labelCol);
-        labelsContainer.appendChild(col.cloneNode(true));
+        tooltip.className = "absolute top-[28px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-xl rounded px-2.5 py-1.5 z-30 pointer-events-none text-slate-800 font-bold flex items-center";
+        // Rendered as horizontal SVG string!
+        tooltip.innerHTML = createSVGStringHTML(valStr, 'h-4 text-slate-800');
+        labelCol.appendChild(tooltip);
+
+        labelsContainer.appendChild(labelCol);
       }
       
-      // Clean duplicate nodes in register
-      const cols = Array.from(labelsContainer.children);
-      labelsContainer.innerHTML = '';
-      cols.forEach((c, index) => {
-        // Strip the box digit wrappers out of the bottom label area
-        const digitWrap = c.querySelector('.w-full.h-12');
-        if (digitWrap) digitWrap.remove();
-        // Adjust tooltip position for standalone label row if hovered
-        const tooltip = c.querySelector('.absolute');
-        if (tooltip) tooltip.setAttribute('class', 'absolute top-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-lg rounded px-1.5 py-1 z-30 pointer-events-none');
-        labelsContainer.appendChild(c);
-      });
-
       renderBits(0n);
     }
 
@@ -741,6 +697,7 @@
 
       const dt = (currentTime - lastTime) / 1000;
       lastTime = currentTime;
+      flickerTime += dt * 1000; // accumulate active simulation time in ms
 
       if (speed >= 0) {
         const intSpeed = Math.floor(speed);
@@ -766,28 +723,28 @@
 
     // Render bit SVGs based on counter + randomized spin bits
     function renderBits(counter) {
-      // Flickering capped at speed - 5 (beyond 2^5 flips/sec, it blurs)
+      // Toggling capped at speed - 5 (beyond 2^5 flips/sec, we cap the flicker speed)
       const blurThreshold = speed - 5;
+      const period = 1000 / 32; // Toggling capped at exactly 32 Hz
 
       for (let i = 0; i < numBits; i++) {
         let bitVal = 0;
-        let isSpinning = false;
 
         if (i < blurThreshold) {
-          bitVal = Math.random() > 0.5 ? 1 : 0;
-          isSpinning = true;
+          // Instead of blurring, toggle at exactly 32Hz with phase offsets
+          bitVal = (Math.floor((flickerTime + i * 37) / period)) % 2;
         } else {
           bitVal = Number((counter >> BigInt(i)) & 1n);
         }
 
-        const cacheKey = isSpinning ? `spin-${i}-${bitVal}` : `bit-${i}-${bitVal}`;
+        const cacheKey = `bit-${i}-${bitVal}`;
         if (prevBits[i] !== cacheKey) {
           const useEl = document.getElementById(`bit-use-${i}`);
           const svgEl = document.getElementById(`bit-svg-${i}`);
           
           if (useEl && svgEl) {
             useEl.setAttribute('href', `#digit-${bitVal}`);
-            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-10 max-w-[28px] val-${bitVal} ${isSpinning ? 'spinning' : ''}`);
+            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-10 max-w-[28px] val-${bitVal}`);
           }
           prevBits[i] = cacheKey;
         }
