@@ -599,15 +599,15 @@
 
     // Calculations & Statistics Updates (using SVG inlining)
     function updateStats() {
-      // Guesses Rate Title: formatted as = Y (ditched the 2^speed prefix)
+      // Guesses Rate Title: formatted as Y (ditched the 2^speed prefix and equal sign)
       if (speed < 50) {
         const rate = Math.round(Math.pow(2, speed));
-        statGuessesRate.innerHTML = createSVGStringHTML(`= ${rate.toLocaleString()}`, 'h-16 text-sky-600');
+        statGuessesRate.innerHTML = createSVGStringHTML(`${rate.toLocaleString()}`, 'h-16 text-sky-600');
       } else {
         const log10Val = speed * 0.30102999566398114;
         const exp = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - exp);
-        statGuessesRate.innerHTML = createSVGStringHTML(`= ${mantissa.toFixed(3)} × 10<sup>${exp}</sup>`, 'h-16 text-sky-600');
+        statGuessesRate.innerHTML = createSVGStringHTML(`${mantissa.toFixed(3)} × 10<sup>${exp}</sup>`, 'h-16 text-sky-600');
       }
 
       // 2. Search Space Size (fixed height 56px to avoid overlaps)
