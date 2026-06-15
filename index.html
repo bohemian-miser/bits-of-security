@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bits of Security - Brute Force Simulator</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles that Tailwind doesn't handle easily */
+    .digit-svg {
+      transition: fill 0.1s ease, filter 0.1s ease;
+    }
+    /* Style for 0 */
+    .val-0 {
+      fill: #38bdf8; /* sky-400 */
+      filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.4));
+    }
+    /* Style for 1 */
+    .val-1 {
+      fill: #10b981; /* emerald-500 */
+      filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.6));
+    }
+    /* Spinning/blur effect for ultra-fast bits */
+    .spinning {
+      filter: blur(2px) opacity(0.6) !important;
+    }
+    /* Vertical text for powers of 2 */
+    .vertical-text {
+      writing-mode: vertical-lr;
+      text-orientation: mixed;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans selection:bg-emerald-500/30">
+
+  <!-- SVG Sprite Definitions (Hidden) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <!-- Digit 0 definition -->
+    <g id="digit-0" transform="translate(1, 0)">
+      <path d="M17.1,6.52C6.52,12.23,1.14,23.32.16,35c-.93,11.09,2,26.65,12,33.22,12.18,8,25.55-3.47,30.88-14.19,6.39-12.84,8.33-29.94,2.34-43.32C38.31-5.2,20.35-1.5,10.56,9.6,8,12.49,12.24,16.75,14.8,13.85,19,9,26,4,32.79,6,40.12,8.22,42,17.82,42.65,24.4,43.91,37.67,40,55.74,27.44,62.87,13,71.07,6.41,51.13,6,40.22,5.65,28.92,9.74,17.3,20.13,11.7c3.4-1.83.37-7-3-5.18Z"/>
+    </g>
+    <!-- Digit 1 definition -->
+    <g id="digit-1" transform="translate(18.3, 5)">
+      <path d="M2.38,2.9A447.69,447.69,0,0,1,0,62.44c-.41,3.83,5.59,3.81,6,0A447.69,447.69,0,0,0,8.38,2.9c-.1-3.85-6.1-3.87-6,0Z"/>
+    </g>
+    <!-- Long Box definition (used for drawing the frame background) -->
+    <g id="long-box-path">
+      <path fill="currentColor" d="M6.64,14.31C9.9,31.78,3.17,49.09.77,66.23-1,78.67.06,91.49,5.58,102.92A38.3,38.3,0,0,0,34.2,124.48c8.67,1.38,17.59,1,26.34,1.17l28,.4q112.85,1.59,225.71,2.55,112.36,1,224.72,1.29,112.86.34,225.73,0,56.43-.15,112.86-.45,28-.15,55.93-.34l28-.2c8.89-.07,18.1.55,26.94-.4,14.92-1.6,18.14-14.78,15.1-27.49-1.7-7.14-4.38-13.91-5.62-21.18a91.91,91.91,0,0,1-.67-24.83,95.58,95.58,0,0,1,6.38-25c2.58-6.54,5.11-13.9,1.19-20.5C997.33-3,976.75.41,964.8.45l-225.64.69-225.64.69-224.65.68L63.22,3.19,8.31,3.36c-7.08,0-7.09,11,0,11L227,13.69,445.62,13l218.65-.67,218.65-.67,54.91-.17,27-.08c7.87,0,16.45-1,24.21.5,2.49.49,5.52,1.26,6.53,3.85,1.26,3.24-1.08,7.54-2.28,10.55a102.86,102.86,0,0,0-2.62,70.17c1.62,5,4.23,11.27,2.87,16.62-1.72,6.76-13,4.67-18.1,4.71q-27.47.21-54.93.39-54.43.35-108.87.55-109.37.41-218.74.23t-218.73-1q-109.36-.77-218.72-2.13c-36.48-.45-73-.68-109.45-1.52-7.12-.16-14.28-.71-20.45-4.6a29.29,29.29,0,0,1-10.72-13C9.56,85.09,10.54,72.23,12.94,60c3.16-16.18,7.39-32,4.31-48.59-1.3-7-11.9-4-10.61,2.92Z"/>
+    </g>
+  </svg>
+
+  <!-- Main Content Area -->
+  <main class="container mx-auto px-4 py-8 max-w-5xl flex-grow flex flex-col justify-center gap-8">
+    
+    <!-- Header -->
+    <header class="text-center space-y-2">
+      <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
+        Bits of Security
+      </h1>
+      <p class="text-slate-400 max-w-lg mx-auto text-sm sm:text-base">
+        Visualize the scale of cryptographic keys. Adjust the brute-force speed to see how long it takes to exhaust the search space.
+      </p>
+    </header>
+
+    <!-- Visualizer Section -->
+    <section class="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+      
+      <!-- Key Size Selector -->
+      <div class="flex items-center justify-between mb-6">
+        <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space</label>
+        <div class="inline-flex rounded-md shadow-sm" role="group">
+          <button type="button" onclick="setKeySize(32)" id="btn-keysize-32" class="px-3 py-1.5 text-xs font-medium rounded-l-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">32-bit</button>
+          <button type="button" onclick="setKeySize(64)" id="btn-keysize-64" class="px-3 py-1.5 text-xs font-medium border-t border-b border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">64-bit</button>
+          <button type="button" onclick="setKeySize(128)" id="btn-keysize-128" class="px-3 py-1.5 text-xs font-medium border-t border-b border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">128-bit (AES)</button>
+          <button type="button" onclick="setKeySize(256)" id="btn-keysize-256" class="px-3 py-1.5 text-xs font-medium rounded-r-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">256-bit (AES)</button>
+        </div>
+      </div>
+
+      <!-- The Binary Register Box -->
+      <div class="relative w-full mb-4">
+        <!-- SVG Frame (long box background) -->
+        <div class="absolute inset-0 w-full h-20 text-slate-800 pointer-events-none">
+          <svg viewBox="0 0 1006.78 130.08" class="w-full h-full" preserveAspectRatio="none">
+            <use href="#long-box-path" />
+          </svg>
+        </div>
+
+        <!-- Digits Grid -->
+        <div id="register-grid" class="relative z-10 w-full h-20 flex justify-between items-center px-4 sm:px-6">
+          <!-- Dynamic bit columns will be injected here by JS -->
+        </div>
+      </div>
+
+      <!-- Faint labels below the register -->
+      <div id="labels-container" class="w-full flex justify-between px-4 sm:px-6 h-32 overflow-hidden border-t border-slate-800/50 pt-2 select-none pointer-events-none">
+        <!-- Dynamic vertical power labels injected here -->
+      </div>
+
+    </section>
+
+    <!-- Controls & Stats Section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Controls -->
+      <div class="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 space-y-6 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Simulation Control</h3>
+          
+          <div class="space-y-4">
+            <!-- Speed Input & Navigation -->
+            <div class="flex items-center justify-between gap-4">
+              <label for="speed-input" class="text-sm text-slate-300">Brute Force Speed:</label>
+              <div class="flex items-center gap-2">
+                <input 
+                  type="number" 
+                  id="speed-input" 
+                  min="0" 
+                  max="256" 
+                  step="1" 
+                  class="bg-slate-850 border border-slate-750 rounded-lg px-3 py-1.5 text-right w-24 text-emerald-400 font-mono focus:outline-none focus:border-emerald-500 text-lg"
+                  value="10"
+                >
+                <span class="text-sm text-slate-400">bits / sec</span>
+              </div>
+            </div>
+
+            <!-- Slider Speed Input -->
+            <div class="space-y-1">
+              <input 
+                type="range" 
+                id="speed-slider" 
+                min="0" 
+                max="128" 
+                step="0.1" 
+                class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                value="10"
+              >
+              <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                <span>0 bits (1/sec)</span>
+                <span>64 bits (Global Hashrate)</span>
+                <span>128 bits (AES-128 Limit)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Presets -->
+          <div class="mt-6 space-y-2">
+            <span class="text-xs text-slate-500 block">Real-World Comparisons:</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="setSpeed(0)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
+                <strong class="block text-[10px] text-slate-500">Manual Entry</strong>
+                1 attempt / sec (0 bits)
+              </button>
+              <button onclick="setSpeed(31.5)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
+                <strong class="block text-[10px] text-slate-500">RTX 4090 GPU (SHA-256)</strong>
+                3.0B attempts / sec (31.5 bits)
+              </button>
+              <button onclick="setSpeed(50)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
+                <strong class="block text-[10px] text-slate-500">Supercomputer Cluster</strong>
+                1.1P attempts / sec (50 bits)
+              </button>
+              <button onclick="setSpeed(69.2)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
+                <strong class="block text-[10px] text-slate-500">Bitcoin Network Hashrate</strong>
+                670Q attempts / sec (69.2 bits)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6 pt-4 border-t border-slate-800/50">
+          <button id="btn-reset" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 px-4 py-2.5 rounded-xl font-semibold text-sm transition">
+            Reset Counter
+          </button>
+          <button id="btn-toggle-play" class="flex-1 bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-white">
+            Pause
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Panel -->
+      <div class="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between">
+        <div class="space-y-6">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Simulation Statistics</h3>
+
+          <!-- Stat: Guesses/Sec -->
+          <div class="space-y-1">
+            <span class="text-xs text-slate-400 block">Guesses Per Second</span>
+            <div id="stat-guesses-rate" class="text-2xl font-bold font-mono text-emerald-400">
+              1,024
+            </div>
+            <span class="text-[10px] text-slate-500 block">Equal to 2<sup><span id="stat-bits-exponent">10</span></sup> keys checked per second.</span>
+          </div>
+
+          <!-- Stat: Keyspace Size -->
+          <div class="space-y-1">
+            <span class="text-xs text-slate-400 block">Total Search Space Size</span>
+            <div id="stat-keyspace-size" class="text-lg font-bold font-mono">
+              1.84 × 10<sup>19</sup> keys
+            </div>
+            <span class="text-[10px] text-slate-500 block">Total combinations for <span id="stat-keyspace-bits">64</span> bits of security.</span>
+          </div>
+
+          <!-- Stat: Time to Exhaust -->
+          <div class="p-4 bg-slate-950/80 border border-slate-800 rounded-xl space-y-1">
+            <span class="text-xs text-slate-400 block">Average Time to Find Key (50% Space)</span>
+            <div id="stat-time-average" class="text-xl font-bold font-mono text-amber-400">
+              --
+            </div>
+            <span class="text-[10px] text-slate-500 block">Time to search 100% of keyspace: <span id="stat-time-full" class="font-mono text-slate-400">--</span></span>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-slate-500 mt-6 leading-relaxed">
+          <span class="text-emerald-500 font-semibold">Tip:</span> Hold the <span class="bg-slate-800 px-1 py-0.5 rounded text-slate-300">▲ Arrow Up</span> or <span class="bg-slate-800 px-1 py-0.5 rounded text-slate-300">▼ Arrow Down</span> keys anywhere on the page to change the brute-force speed smoothly.
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 mt-12 bg-slate-950">
+    <div class="container mx-auto px-4 space-y-2">
+      <p>
+        Created by <a href="https://github.com/bohemian-miser" class="text-slate-400 hover:text-emerald-400 underline transition">bohemian-miser</a> &bull; 
+        <a href="https://github.com/bohemian-miser/bits-of-security" class="text-slate-400 hover:text-emerald-400 underline transition">GitHub Repository</a>
+      </p>
+      <p class="text-[10px] text-slate-600">
+        Demo intended to build mathematical intuition about exponential growth & cryptanalysis resistance.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Script logic -->
+  <script>
+    // Configuration & State
+    let numBits = 64; // Default bits
+    let speed = 10.0;  // Default speed in bits/sec (2^10 = 1024 guesses/sec)
+    let isPlaying = true;
+
+    // Simulation math variables
+    let lastTime = performance.now();
+    
+    // Scale factor to support fractional speed and sub-bit precision via BigInt fixed-point
+    const SCALE_SHIFT = 32n;
+    const SCALE_VAL = 1n << SCALE_SHIFT;
+    
+    // Internal counter is scaled by 2^32
+    let scaledCounter = 0n;
+    
+    // Cache previous bit values to avoid redrawing unaffected DOM nodes
+    let prevBits = new Array(256).fill(null);
+
+    // DOM Elements
+    const registerGrid = document.getElementById('register-grid');
+    const labelsContainer = document.getElementById('labels-container');
+    const speedInput = document.getElementById('speed-input');
+    const speedSlider = document.getElementById('speed-slider');
+    const btnTogglePlay = document.getElementById('btn-toggle-play');
+    const btnReset = document.getElementById('btn-reset');
+    
+    // Stats elements
+    const statGuessesRate = document.getElementById('stat-guesses-rate');
+    const statBitsExponent = document.getElementById('stat-bits-exponent');
+    const statKeyspaceSize = document.getElementById('stat-keyspace-size');
+    const statKeyspaceBits = document.getElementById('stat-keyspace-bits');
+    const statTimeAverage = document.getElementById('stat-time-average');
+    const statTimeFull = document.getElementById('stat-time-full');
+
+    // Init UI
+    function init() {
+      buildRegister();
+      updateSpeedControls();
+      updateStats();
+      setActiveKeySizeButton();
+      
+      // Event Listeners
+      speedInput.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value);
+        if (isNaN(val)) val = 0;
+        setSpeed(val, 'input');
+      });
+
+      speedSlider.addEventListener('input', (e) => {
+        setSpeed(parseFloat(e.target.value), 'slider');
+      });
+
+      btnTogglePlay.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        btnTogglePlay.innerText = isPlaying ? "Pause" : "Play";
+        btnTogglePlay.className = isPlaying 
+          ? "flex-1 bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-white"
+          : "flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-755 hover:border-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-slate-300";
+        if (isPlaying) {
+          lastTime = performance.now();
+          requestAnimationFrame(loop);
+        }
+      });
+
+      btnReset.addEventListener('click', () => {
+        scaledCounter = 0n;
+        prevBits.fill(null);
+        renderBits(0n);
+      });
+
+      // Start loop
+      requestAnimationFrame(loop);
+    }
+
+    // Set active class on keysize buttons
+    function setActiveKeySizeButton() {
+      [32, 64, 128, 256].forEach(size => {
+        const btn = document.getElementById(`btn-keysize-${size}`);
+        if (size === numBits) {
+          btn.className = "px-3 py-1.5 text-xs font-semibold border border-emerald-500/30 bg-emerald-950/50 text-emerald-400 z-10 first:rounded-l-lg last:rounded-r-lg";
+        } else {
+          btn.className = "px-3 py-1.5 text-xs font-medium border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 first:rounded-l-lg last:rounded-r-lg";
+        }
+      });
+    }
+
+    // Change Key Size
+    function setKeySize(bits) {
+      numBits = bits;
+      setActiveKeySizeButton();
+      buildRegister();
+      updateStats();
+      // Reset counter on change to prevent overflow index errors
+      scaledCounter = 0n;
+      prevBits.fill(null);
+    }
+
+    // Build DOM elements for each bit
+    function buildRegister() {
+      registerGrid.innerHTML = '';
+      labelsContainer.innerHTML = '';
+      
+      // Calculate widths and intervals dynamically
+      // For large sizes (e.g. 256), we want them tight
+      const labelInterval = numBits <= 32 ? 1 : (numBits <= 64 ? 2 : (numBits <= 128 ? 8 : 16));
+
+      // Loop from MSB to LSB (left to right)
+      for (let i = numBits - 1; i >= 0; i--) {
+        // Create bit container (column)
+        const col = document.createElement('div');
+        col.className = "flex flex-col items-center flex-grow flex-shrink basis-0 h-full justify-between";
+        
+        // Digit Wrapper
+        const digitWrap = document.createElement('div');
+        digitWrap.className = "w-full h-10 flex items-center justify-center relative";
+        
+        // SVG representation using inline sprite references
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 -10 45 90');
+        // Fit width of columns
+        svg.className = 'digit-svg w-full h-full max-h-8 max-w-[28px] val-0';
+        svg.id = `bit-svg-${i}`;
+        
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute('href', '#digit-0');
+        use.id = `bit-use-${i}`;
+        
+        svg.appendChild(use);
+        digitWrap.appendChild(svg);
+        col.appendChild(digitWrap);
+        
+        registerGrid.appendChild(col);
+
+        // Label Column
+        const labelCol = document.createElement('div');
+        labelCol.className = "flex flex-col items-center flex-grow flex-shrink basis-0 text-[10px] select-none text-slate-500 font-mono text-center";
+        
+        // Show labels only at specific intervals to prevent overcrowding
+        if (i % labelInterval === 0 || i === 0) {
+          // Exponent e.g. 2^0, 2^8
+          const exp = document.createElement('div');
+          exp.className = "text-[9px] text-slate-600 font-bold mb-1";
+          exp.innerHTML = `2<sup>${i}</sup>`;
+          labelCol.appendChild(exp);
+
+          // Value vertical representation
+          const val = document.createElement('div');
+          val.className = "vertical-text tracking-[1.5px] text-[8px] opacity-40 font-mono text-slate-400 mt-1 uppercase";
+          val.innerText = formatExponentValue(i);
+          labelCol.appendChild(val);
+        } else {
+          // Just a dot/marker
+          const dot = document.createElement('div');
+          dot.className = "w-1 h-1 rounded-full bg-slate-800 mt-2";
+          labelCol.appendChild(dot);
+        }
+        
+        labelsContainer.appendChild(labelCol);
+      }
+      
+      // Update display initially
+      renderBits(0n);
+    }
+
+    // Return numerical text value of the exponent
+    function formatExponentValue(exp) {
+      if (exp === 0) return "1";
+      // BigInt exponentiation is exact
+      const val = 1n << BigInt(exp);
+      const str = val.toString();
+      if (str.length > 15) {
+        // Return shorthand for huge numbers: 1.23e38 => "1.2E38"
+        const log10Val = exp * 0.30103;
+        const e10 = Math.floor(log10Val);
+        const mantissa = Math.pow(10, log10Val - e10);
+        return `${mantissa.toFixed(1)}e${e10}`;
+      }
+      // Insert commas for readability in vertical display
+      return str;
+    }
+
+    // Set simulation speed
+    function setSpeed(val, source) {
+      // Clamp between 0 and 256
+      speed = Math.max(0, Math.min(256, val));
+      
+      if (source !== 'input') speedInput.value = speed.toFixed(1);
+      if (source !== 'slider') speedSlider.value = speed;
+      
+      updateStats();
+    }
+
+    // Helper for buttons to change speed directly
+    function adjustSpeed(amount) {
+      setSpeed(speed + amount);
+    }
+
+    // Update speed UI text boxes
+    function updateSpeedControls() {
+      speedInput.value = speed.toFixed(1);
+      speedSlider.value = speed;
+    }
+
+    // Calculations & Statistics Updates
+    function updateStats() {
+      // 1. Guesses/Sec
+      if (speed < 50) {
+        const rate = Math.round(Math.pow(2, speed));
+        statGuessesRate.innerText = rate.toLocaleString();
+      } else {
+        const log10Val = speed * 0.30102999566398114; // log10(2)
+        const exp = Math.floor(log10Val);
+        const mantissa = Math.pow(10, log10Val - exp);
+        statGuessesRate.innerText = `${mantissa.toFixed(3)} × 10¹³`.replace('¹³', getSuperscriptString(exp));
+      }
+      statBitsExponent.innerText = speed.toFixed(1);
+
+      // 2. Search Space Size
+      const logSpace = numBits * 0.30102999566398114;
+      const expSpace = Math.floor(logSpace);
+      const mantSpace = Math.pow(10, logSpace - expSpace);
+      statKeyspaceSize.innerHTML = `${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup> keys`;
+      statKeyspaceBits.innerText = numBits;
+
+      // 3. Time calculation
+      // Time = 2^(numBits - speed)
+      const diffExponent = numBits - speed;
+      
+      statTimeAverage.innerHTML = formatTime(diffExponent - 1); // 50% search space average
+      statTimeFull.innerHTML = formatTime(diffExponent); // 100% search space
+    }
+
+    // Helper to generate unicode superscript exponents
+    function getSuperscriptString(num) {
+      const sups = {
+        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
+        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹'
+      };
+      return num.toString().split('').map(char => sups[char] || char).join('');
+    }
+
+    // Format exponent difference into human readable time duration
+    function formatTime(exponent) {
+      if (exponent < 0) {
+        return "Instantaneous (< 1ms)";
+      }
+      // If exponent is small enough (under 30), calculate exact seconds
+      if (exponent <= 30) {
+        const seconds = Math.pow(2, exponent);
+        return formatSeconds(seconds);
+      }
+
+      // Convert larger exponents into Years (1 Year ≈ 2^24.9 seconds)
+      const expYears = exponent - 24.9088;
+      const years = Math.pow(2, expYears);
+
+      // Age of the universe ≈ 13.8 billion years ≈ 2^33.68 years
+      if (years < 1000) {
+        return `${years.toFixed(1)} years`;
+      } else if (years < 1e6) {
+        return `${(years/1000).toFixed(1)} thousand years`;
+      } else if (years < 1e9) {
+        return `${(years/1e6).toFixed(1)} million years`;
+      } else if (years < 1.38e10) {
+        return `${(years/1e9).toFixed(1)} billion years`;
+      }
+
+      // Beyond: express in Lifetimes of the Universe (13.8 Billion Years = 1.38e10 Years)
+      const expUniverses = exponent - 58.593; // 2^58.593 seconds
+      if (expUniverses < 30) {
+        const universes = Math.pow(2, expUniverses);
+        return `${universes.toLocaleString(undefined, {maximumFractionDigits: 1})} ages of the universe`;
+      } else {
+        // Scientific notation for incredibly vast times
+        const log10Val = expUniverses * 0.30103;
+        const exp10 = Math.floor(log10Val);
+        const mantissa = Math.pow(10, log10Val - exp10);
+        return `${mantissa.toFixed(2)} × 10<sup>${exp10}</sup> ages of the universe`;
+      }
+    }
+
+    function formatSeconds(s) {
+      if (s < 0.001) return "< 1 millisecond";
+      if (s < 1) return `${(s * 1000).toFixed(0)} milliseconds`;
+      if (s < 60) return `${s.toFixed(1)} seconds`;
+      const m = s / 60;
+      if (m < 60) return `${m.toFixed(1)} minutes`;
+      const h = m / 60;
+      if (h < 24) return `${h.toFixed(1)} hours`;
+      const d = h / 24;
+      return `${d.toFixed(1)} days`;
+    }
+
+    // Main Simulation Loop
+    function loop(currentTime) {
+      if (!isPlaying) return;
+
+      const dt = (currentTime - lastTime) / 1000; // time in seconds
+      lastTime = currentTime;
+
+      // Update simulation counter
+      if (speed >= 0) {
+        // Compute increment for this frame: dt * 2^speed
+        // Since we support floats, interpolate 2^speed.
+        const intSpeed = Math.floor(speed);
+        const fracSpeed = speed - intSpeed;
+        const multiplier = Math.pow(2, fracSpeed);
+        
+        // Calculate scaled increment: (dt * multiplier * 2^32) * 2^intSpeed
+        // Using microsecond scaling to avoid floating point issues
+        const dtUs = BigInt(Math.round(dt * multiplier * 1000000));
+        
+        // Scaled increment is dtUs * 2^(intSpeed + 32) / 1,000,000
+        const shiftAmount = BigInt(intSpeed) + SCALE_SHIFT;
+        
+        // Prevent shifting overflow. Limit shifting size based on Max Bits
+        if (shiftAmount < 300n) {
+          const scaledInc = (dtUs * (1n << shiftAmount)) / 1000000n;
+          scaledCounter += scaledInc;
+        } else {
+          // Extremely fast speed, counter is essentially infinite. Just cap increment.
+          scaledCounter += (1n << 256n) * SCALE_VAL;
+        }
+      }
+
+      // Convert internal counter to display counter
+      const counter = scaledCounter >> SCALE_SHIFT;
+
+      // Render the current bit state
+      renderBits(counter);
+
+      requestAnimationFrame(loop);
+    }
+
+    // Render bit SVGs based on counter + randomized spin bits
+    function renderBits(counter) {
+      // Anything flipping faster than ~30Hz (i.e. index below speed - 5.9)
+      // will be randomized on every frame to simulate spinning/blur.
+      const blurThreshold = speed - 5.9;
+
+      for (let i = 0; i < numBits; i++) {
+        let bitVal = 0;
+        let isSpinning = false;
+
+        if (i < blurThreshold) {
+          // Randomize to simulate visual blur
+          bitVal = Math.random() > 0.5 ? 1 : 0;
+          isSpinning = true;
+        } else {
+          // Read actual bit value from the simulation counter
+          bitVal = Number((counter >> BigInt(i)) & 1n);
+        }
+
+        // Only touch DOM if state changed
+        const cacheKey = isSpinning ? `spin-${i}-${bitVal}` : `bit-${i}-${bitVal}`;
+        if (prevBits[i] !== cacheKey) {
+          const useEl = document.getElementById(`bit-use-${i}`);
+          const svgEl = document.getElementById(`bit-svg-${i}`);
+          
+          if (useEl && svgEl) {
+            useEl.setAttribute('href', `#digit-${bitVal}`);
+            
+            // Apply colors and blur CSS classes
+            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-8 max-w-[28px] val-${bitVal} ${isSpinning ? 'spinning' : ''}`);
+          }
+          prevBits[i] = cacheKey;
+        }
+      }
+    }
+
+    // Custom Arrow Keys Hold Event handling
+    let repeatTimeout = null;
+    let repeatInterval = null;
+
+    function startRepeat(direction) {
+      stopRepeat();
+      adjustSpeed(direction); // Initial tap
+      repeatTimeout = setTimeout(() => {
+        repeatInterval = setInterval(() => {
+          adjustSpeed(direction);
+        }, 50); // Repeat every 50ms
+      }, 350); // Delay before repeat starts
+    }
+
+    function stopRepeat() {
+      clearTimeout(repeatTimeout);
+      clearInterval(repeatInterval);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      // If editing the input directly, let browser handle the keys
+      if (document.activeElement === speedInput) return;
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!e.repeat) startRepeat(1);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (!e.repeat) startRepeat(-1);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        stopRepeat();
+      }
+    });
+
+    // Run Initialization
+    init();
+  </script>
+</body>
+</html>
