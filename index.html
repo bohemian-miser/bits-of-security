@@ -295,15 +295,11 @@
             </button>
           </div>
           
-          <!-- Time to Find Key Box -->
+          <!-- Time to Search Full Space Box -->
           <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 shadow-inner">
-            <span class="text-2xl font-extrabold text-slate-700 block">Time to Find Key</span>
+            <span class="text-2xl font-extrabold text-slate-700 block">Time to Search Full Space</span>
             <div id="stat-time-average" class="text-2xl font-bold font-mono text-amber-600 flex items-center" style="height: 72px;">
               <!-- Inline SVG -->
-            </div>
-            <div class="text-base sm:text-lg text-slate-550 flex items-center gap-1 mt-1 font-medium font-sans">
-              <span>Time to search 100% of keyspace:</span>
-              <span id="stat-time-full" class="font-mono text-slate-500 flex items-center" style="height: 48px;"></span>
             </div>
           </div>
         </div>
@@ -355,7 +351,6 @@
     const statGuessesRate = document.getElementById('stat-guesses-rate-inline');
     const statKeyspaceSize = document.getElementById('stat-keyspace-size-inline');
     const statTimeAverage = document.getElementById('stat-time-average');
-    const statTimeFull = document.getElementById('stat-time-full');
 
     // Render a string using our SVG sprite assets (monospaced look, light theme default)
     function createSVGStringHTML(str, heightClass = 'h-5', customHeightStyle = '') {
@@ -736,14 +731,10 @@
       const mantSpace = Math.pow(10, logSpace - expSpace);
       statKeyspaceSize.innerHTML = createSVGStringHTML(`${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup>`, 'h-14', '56px') + ' <span class="text-2xl text-slate-500 ml-2 font-bold font-mono">keys</span>';
 
-      // 3. Time calculation
+      // 3. Time calculation (Time to search 100% of keyspace)
       const diffExponent = numBits - speed;
-      
-      const timeAvg = formatTimeObj(diffExponent - 1);
-      statTimeAverage.innerHTML = createSVGStringHTML(timeAvg.val, 'h-15', '60px') + ` <span class="text-2xl text-slate-600 ml-2 font-sans font-bold">${timeAvg.unit}</span>`;
-      
       const timeFull = formatTimeObj(diffExponent);
-      statTimeFull.innerHTML = createSVGStringHTML(timeFull.val, 'h-10', '40px') + ` <span class="text-lg text-slate-500 ml-2 font-sans font-semibold">${timeFull.unit}</span>`;
+      statTimeAverage.innerHTML = createSVGStringHTML(timeFull.val, 'h-15', '60px') + ` <span class="text-2xl text-slate-600 ml-2 font-sans font-bold">${timeFull.unit}</span>`;
     }
 
     // Format exponent difference into a value-and-unit object
