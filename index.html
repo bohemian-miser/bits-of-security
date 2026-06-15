@@ -116,8 +116,8 @@
     <section class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl">
       
       <!-- Key Size Selector -->
-      <div class="flex items-center justify-between mb-6">
-        <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space</label>
+      <div class="flex items-center justify-end gap-3 mb-6">
+        <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space (in bits)</label>
         <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
           <!-- Dynamic key size buttons with SVG numbers injected here -->
         </div>
@@ -417,7 +417,48 @@
     }
 
     // Init UI
-    init();
+    function init() {
+      // Build slider static labels in SVG
+      document.getElementById('slider-label-min').innerHTML = createSVGStringHTML('0', 'h-3 text-slate-400');
+      document.getElementById('slider-label-mid').innerHTML = createSVGStringHTML('64', 'h-3 text-slate-400');
+      document.getElementById('slider-label-max').innerHTML = createSVGStringHTML('128', 'h-3 text-slate-400');
+
+      renderPresets();
+      setKeySize(64); // Default
+      updateSpeedControls();
+      
+      // Event Listeners
+      speedInput.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value);
+        if (isNaN(val)) val = 0;
+        setSpeed(val, 'input');
+      });
+
+      speedSlider.addEventListener('input', (e) => {
+        setSpeed(parseFloat(e.target.value), 'slider');
+      });
+
+      btnTogglePlay.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        btnTogglePlay.innerText = isPlaying ? "Pause" : "Play";
+        btnTogglePlay.className = isPlaying 
+          ? "flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition"
+          : "flex-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition";
+        if (isPlaying) {
+          lastTime = performance.now();
+          requestAnimationFrame(loop);
+        }
+      });
+
+      btnReset.addEventListener('click', () => {
+        scaledCounter = 0n;
+        prevBits.fill(null);
+        renderBits(0n);
+      });
+
+      // Start loop
+      requestAnimationFrame(loop);
+    }
 
     // Render Preset buttons dynamically with SVG numbers (Light Theme styled)
     function renderPresets() {
@@ -470,7 +511,7 @@
           : "border-slate-200 bg-white hover:bg-slate-50 text-slate-600";
         const svgSize = createSVGStringHTML(size.toString(), 'h-3 inline-block ' + (isActive ? 'text-sky-600' : 'text-slate-400'));
         return `<button type="button" onclick="setKeySize(${size})" id="btn-keysize-${size}" class="px-3 py-1.5 text-xs flex items-center border transition first:rounded-l-lg last:rounded-r-lg ${activeClass}">
-          ${svgSize}<span class="ml-1"> -bit</span>
+          ${svgSize}
         </button>`;
       }).join('');
     }
