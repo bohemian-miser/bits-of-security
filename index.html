@@ -112,11 +112,15 @@
     <section class="bg-white border border-slate-200 rounded-2xl px-3 py-6 sm:px-4 sm:py-8 shadow-xl">
       
       <!-- Key Size Selector (Aligned Right) -->
-      <div class="flex items-center justify-end gap-3 mb-6">
+      <div class="flex items-center justify-end gap-3 mb-6 flex-wrap">
         <label for="keysize-select" class="text-2xl font-extrabold uppercase tracking-wider text-slate-500">Key Search Space (in bits)</label>
         <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
           <!-- Dynamic key size buttons with SVG numbers injected here -->
         </div>
+        <!-- Equal Sign -->
+        <svg class="h-9 aspect-[55/90] text-slate-400" viewBox="0 -10 55 110"><use href="#sym-eq" /></svg>
+        <!-- Inline Search Space size -->
+        <div id="stat-keyspace-size-inline" class="flex items-center text-slate-800 font-mono" style="height: 48px;"></div>
       </div>
 
       <!-- Main Register Layout (Fluid width, no scrollbars) -->
@@ -157,10 +161,10 @@
           <h3 class="text-3xl font-extrabold uppercase tracking-wider text-slate-600 mb-6">Simulation Control</h3>
           
           <div class="space-y-4">
-            <!-- Speed Input & Navigation -->
-            <div class="flex items-center justify-between gap-4">
-              <label for="speed-input" class="text-2xl font-bold text-slate-700">Brute Force Speed:</label>
-              <div class="flex items-center gap-2">
+            <!-- Speed Input & Navigation (Inline Guesses Rate) -->
+            <div class="flex items-center justify-between gap-4 flex-wrap">
+              <div class="flex items-center gap-3">
+                <label for="speed-input" class="text-2xl font-bold text-slate-700">Brute Force Speed:</label>
                 <input 
                   type="number" 
                   id="speed-input" 
@@ -171,6 +175,12 @@
                   value="10"
                 >
                 <span class="text-2xl font-bold text-slate-650 font-sans">bits / sec</span>
+              </div>
+              
+              <!-- Equal Sign and inlineGuesses -->
+              <div class="flex items-center gap-3">
+                <svg class="h-9 aspect-[55/90] text-slate-400" viewBox="0 -10 55 110"><use href="#sym-eq" /></svg>
+                <div id="stat-guesses-rate-inline" class="text-3xl font-bold font-mono text-sky-600 h-16 flex items-center"></div>
               </div>
             </div>
 
@@ -218,47 +228,22 @@
         </div>
       </div>
 
-      <!-- Stats Panel -->
+      <!-- Stats Panel (Only Average Time to Find Key box) -->
       <div class="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-md">
-        <div class="space-y-6">
-          <h3 class="text-lg font-bold uppercase tracking-wider text-slate-500" style="display:none;">Simulation Statistics</h3>
-          <h3 class="text-3xl font-extrabold uppercase tracking-wider text-slate-600">Simulation Statistics</h3>
-
-          <!-- Stat: Guesses/Sec (Clean 2^X = Y formatting) -->
-          <div class="space-y-1.5">
-            <span class="text-2xl font-extrabold text-slate-650 block">Guesses per second</span>
-            <div id="stat-guesses-rate" class="text-5xl font-bold font-mono text-sky-600 h-20 flex items-center">
-              <!-- Inline SVG rate e.g. 2^10 = 1,024 -->
-            </div>
-          </div>
-
-          <!-- Stat: Keyspace Size -->
-          <div class="space-y-1.5">
-            <span class="text-2xl font-extrabold text-slate-650 block">Total Search Space Size</span>
-            <div id="stat-keyspace-size" class="text-xl font-bold font-mono flex items-center text-slate-800" style="height: 64px;">
-              <!-- Inline SVG -->
-            </div>
-            <div class="text-base sm:text-lg text-slate-600 flex items-center gap-1 mt-0.5 font-medium">
-              <span>Total combinations for</span>
-              <span id="stat-keyspace-bits" class="inline-block" style="height: 36px;"></span>
-              <span>bits of security.</span>
-            </div>
-          </div>
-
-          <!-- Stat: Time to Exhaust -->
-          <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-1.5 shadow-inner">
-            <span class="text-2xl font-extrabold text-slate-650 block">Average Time to Find Key (50% Space)</span>
+        <div class="space-y-6 flex-grow flex flex-col justify-center">
+          <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 shadow-inner">
+            <span class="text-2xl font-extrabold text-slate-700 block">Average Time to Find Key (50% Space)</span>
             <div id="stat-time-average" class="text-2xl font-bold font-mono text-amber-600 flex items-center" style="height: 72px;">
               <!-- Inline SVG -->
             </div>
-            <div class="text-base sm:text-lg text-slate-550 flex items-center gap-1 mt-1 font-medium">
+            <div class="text-base sm:text-lg text-slate-550 flex items-center gap-1 mt-1 font-medium font-sans">
               <span>Time to search 100% of keyspace:</span>
               <span id="stat-time-full" class="font-mono text-slate-500 flex items-center" style="height: 48px;"></span>
             </div>
           </div>
         </div>
 
-        <div class="text-base sm:text-lg text-slate-600 mt-8 leading-relaxed">
+        <div class="text-base sm:text-lg text-slate-600 mt-8 leading-relaxed pt-4 border-t border-slate-100">
           <span class="text-sky-600 font-bold">Tip:</span> Hold the <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono font-semibold">▲ Arrow Up</span> or <span class="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono font-semibold">▼ Arrow Down</span> keys anywhere on the page to change the brute-force speed smoothly.
         </div>
       </div>
@@ -313,9 +298,8 @@
     const btnReset = document.getElementById('btn-reset');
     
     // Stats elements
-    const statGuessesRate = document.getElementById('stat-guesses-rate');
-    const statKeyspaceSize = document.getElementById('stat-keyspace-size');
-    const statKeyspaceBits = document.getElementById('stat-keyspace-bits');
+    const statGuessesRate = document.getElementById('stat-guesses-rate-inline');
+    const statKeyspaceSize = document.getElementById('stat-keyspace-size-inline');
     const statTimeAverage = document.getElementById('stat-time-average');
     const statTimeFull = document.getElementById('stat-time-full');
 
@@ -537,34 +521,30 @@
         registerGrid.appendChild(digitCol);
 
         // 2. Create label column block for labelsContainer (Outside / below box)
+        // Uses absolute containers with left-1/2 translate-x-1/2 and w-0 to prevent layout distortion at 64+ bits
         const labelCol = document.createElement('div');
-        labelCol.className = "group flex flex-col items-center flex-grow flex-shrink basis-0 text-2xl select-none text-slate-400 font-mono text-center relative";
+        labelCol.className = "group flex-grow flex-shrink basis-0 h-full relative select-none font-mono text-center";
         
         // Row 1: Exponent (Statically visible)
         if (i % labelInterval === 0 || i === 0) {
-          labelCol.innerHTML = createExponentLabelHTML(i);
-        } else {
-          const emptyExponent = document.createElement('div');
-          emptyExponent.className = "h-[62px]";
-          labelCol.appendChild(emptyExponent);
+          const expWrapper = document.createElement('div');
+          expWrapper.className = "absolute left-1/2 -translate-x-1/2 w-0 overflow-visible flex justify-center top-0";
+          expWrapper.innerHTML = createExponentLabelHTML(i);
+          labelCol.appendChild(expWrapper);
         }
 
         // Row 2: 10^K scale marker (Statically visible)
         if (pow10Map[i] !== undefined) {
-          const pow10Div = document.createElement('div');
-          pow10Div.className = "mt-2 flex justify-center w-full";
-          pow10Div.innerHTML = create10ExponentLabelHTML(pow10Map[i]);
-          labelCol.appendChild(pow10Div);
-        } else {
-          const empty = document.createElement('div');
-          empty.className = "h-[56px] w-full";
-          labelCol.appendChild(empty);
+          const pow10Wrapper = document.createElement('div');
+          pow10Wrapper.className = "absolute left-1/2 -translate-x-1/2 w-0 overflow-visible flex justify-center top-[62px]";
+          pow10Wrapper.innerHTML = create10ExponentLabelHTML(pow10Map[i]);
+          labelCol.appendChild(pow10Wrapper);
         }
 
         // Row 3: Hover Tooltip (Full HORIZONTAL value floats on mouseover)
         const valStr = formatExponentValue(i);
         const tooltip = document.createElement('div');
-        tooltip.className = "absolute top-[80px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-xl rounded px-5 py-3.5 z-30 pointer-events-none text-slate-800 font-bold flex items-center";
+        tooltip.className = "absolute top-[108px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-xl rounded px-5 py-3.5 z-30 pointer-events-none text-slate-800 font-bold flex items-center";
         // Rendered as horizontal SVG string!
         tooltip.innerHTML = createSVGStringHTML(valStr, 'h-12 text-slate-800');
         labelCol.appendChild(tooltip);
@@ -628,7 +608,6 @@
       const expSpace = Math.floor(logSpace);
       const mantSpace = Math.pow(10, logSpace - expSpace);
       statKeyspaceSize.innerHTML = createSVGStringHTML(`${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup>`, 'h-14', '56px') + ' <span class="text-2xl text-slate-500 ml-2 font-bold font-mono">keys</span>';
-      statKeyspaceBits.innerHTML = createSVGStringHTML(numBits.toString(), 'h-9', '36px');
 
       // 3. Time calculation
       const diffExponent = numBits - speed;
