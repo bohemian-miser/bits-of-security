@@ -7,28 +7,26 @@
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom styles that Tailwind doesn't handle easily */
+    /* Custom styles */
     .digit-svg {
       transition: fill 0.1s ease, filter 0.1s ease;
     }
-    /* Style for 0 */
     .val-0 {
       fill: #38bdf8; /* sky-400 */
       filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.4));
     }
-    /* Style for 1 */
     .val-1 {
       fill: #10b981; /* emerald-500 */
       filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.6));
     }
-    /* Spinning/blur effect for ultra-fast bits */
     .spinning {
       filter: blur(2px) opacity(0.6) !important;
     }
-    /* Vertical text for powers of 2 */
-    .vertical-text {
-      writing-mode: vertical-lr;
-      text-orientation: mixed;
+    /* Simple vertical layout for number stacking */
+    .vertical-digit-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   </style>
 </head>
@@ -36,15 +34,63 @@
 
   <!-- SVG Sprite Definitions (Hidden) -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <!-- Digit 0 definition -->
-    <g id="digit-0" transform="translate(1, 0)">
+    <!-- Digit 0 -->
+    <g id="digit-0" transform="translate(6, 0)">
       <path d="M17.1,6.52C6.52,12.23,1.14,23.32.16,35c-.93,11.09,2,26.65,12,33.22,12.18,8,25.55-3.47,30.88-14.19,6.39-12.84,8.33-29.94,2.34-43.32C38.31-5.2,20.35-1.5,10.56,9.6,8,12.49,12.24,16.75,14.8,13.85,19,9,26,4,32.79,6,40.12,8.22,42,17.82,42.65,24.4,43.91,37.67,40,55.74,27.44,62.87,13,71.07,6.41,51.13,6,40.22,5.65,28.92,9.74,17.3,20.13,11.7c3.4-1.83.37-7-3-5.18Z"/>
     </g>
-    <!-- Digit 1 definition -->
-    <g id="digit-1" transform="translate(18.3, 5)">
+    <!-- Digit 1 -->
+    <g id="digit-1" transform="translate(23, 5)">
       <path d="M2.38,2.9A447.69,447.69,0,0,1,0,62.44c-.41,3.83,5.59,3.81,6,0A447.69,447.69,0,0,0,8.38,2.9c-.1-3.85-6.1-3.87-6,0Z"/>
     </g>
-    <!-- Long Box definition (used for drawing the frame background) -->
+    <!-- Digit 2 -->
+    <g id="digit-2" transform="translate(7, 0)">
+      <path d="M8.41,12.11A15.59,15.59,0,0,1,29.15,8.45c6.49,4.3,9,12.93,7,20.24C31.9,43.77,15.89,55.83,2,61.28l1.6,5.79a53.63,53.63,0,0,1,39.84-.93c3.63,1.34,5.19-4.46,1.6-5.79a58.64,58.64,0,0,0-43,.93c-3.48,1.46-2,7.21,1.6,5.79A71,71,0,0,0,30.36,49c6.91-7.58,13.5-17.29,12.35-28-1-9.1-7.09-17.71-16.14-20.19A21.74,21.74,0,0,0,3.23,9.08c-2.27,3.13,2.94,6.13,5.18,3Z"/>
+    </g>
+    <!-- Digit 3 -->
+    <g id="digit-3" transform="translate(6, 0)">
+      <path d="M5.26,15c4.67-3.83,9.94-8.29,16.21-9,5.52-.59,11,2.05,11.77,8C34.8,26.36,21,32,11.74,35.49L14.05,41c11-6.12,24,3.61,21.7,15.84C33.24,70.2,17,73.81,7.37,65.33,4.48,62.79.22,67,3.12,69.57,16.55,81.39,38.88,75.8,41.77,57.09,44.39,40.1,26,27.45,11,35.79c-2.9,1.61-.93,6.7,2.31,5.48,12.72-4.77,31.21-14.65,25-31.53C36,3.31,29.54-.09,22.89,0,14.3.12,7.35,5.6,1,10.8-2,13.25,2.29,17.47,5.26,15Z"/>
+    </g>
+    <!-- Digit 4 -->
+    <g id="digit-4" transform="translate(12, 0)">
+      <path d="M3.94,2.16A184.26,184.26,0,0,0,.53,25.89C.18,30.57-1.64,38.4,4.42,40c3.18.85,7.21.08,10.43,0l12-.36,25.94-.78c3.85-.12,3.87-6.12,0-6L13.85,34c-1.86.06-6.57,1.18-7.73-.43-1-1.33.43-8.08.56-9.64a172.58,172.58,0,0,1,3-20.21c.78-3.77-5-5.38-5.79-1.6ZM23.87,11.55,23,63.85c-.07,3.86,5.93,3.86,6,0l.91-52.29c.07-3.86-5.93-3.86-6,0Z"/>
+    </g>
+    <!-- Digit 5 -->
+    <g id="digit-5" transform="translate(7, 0)">
+      <path d="M3.85,9.79l1.6,30.07c.15,2.9,4,4.17,5.59,1.51A12.2,12.2,0,0,1,27,37c5.71,3,8.23,10.36,7,16.45S28,64.53,22.49,67.22c-3.21,1.57-7.51,2.94-10.92,1.25s-4.92-5.51-5.7-9C5,55.75-.76,57.34.08,61.11,2.36,71.24,10.55,77.43,20.89,74.26,30.22,71.41,38.43,63.6,40,53.73c1.42-9-3-19.11-11.67-22.71A18.22,18.22,0,0,0,5.86,38.35l5.59,1.51L9.85,9.79c-.2-3.84-6.21-3.87-6,0ZM11.16,13.16a30.54,30.54,0,0,1,25-6.8c3.78.65,5.4-5.13,1.6-5.79A37.08,37.08,0,0,0,6.92,8.92c-3,2.49,1.31,6.72,4.24,4.24Z"/>
+    </g>
+    <!-- Digit 6 -->
+    <g id="digit-6" transform="translate(7, 0)">
+      <path d="M34.12,1.07c-32.95-9.6-47.85,48.46-18,60.74C28,66.72,43.36,58.67,39.91,44.49,36.3,29.65,18.79,28.72,8.42,36.85c-3,2.38,1.24,6.6,4.24,4.24,7.5-5.87,21.67-4.49,21.73,7.27,0,5.43-4.67,8.71-9.73,9-4.85.3-9.48-2.19-12.71-5.67C-1.44,37.32,9.12,0,32.52,6.85c3.71,1.08,5.3-4.71,1.6-5.79Z"/>
+    </g>
+    <!-- Digit 7 -->
+    <g id="digit-7" transform="translate(2, 0)">
+      <path d="M2.89,6,48,7.75,45.83,2.63A142.75,142.75,0,0,0,13.65,59.44c-1.09,3.71,4.7,5.3,5.79,1.6A136,136,0,0,1,50.07,6.87,3,3,0,0,0,48,1.75L2.89,0C-1-.15-1,5.85,2.89,6Z"/>
+    </g>
+    <!-- Digit 8 -->
+    <g id="digit-8" transform="translate(3, 0)">
+      <path d="M40.56,2.8C28-.53,9.75-3.54,2.06,10.33a16.41,16.41,0,0,0-.21,15.53c3.22,5.75,9.44,7.07,15.54,7.52C25.7,34,35.51,35,40.27,42.89s-.15,15-8.08,17.49c-7,2.21-18.16,3.38-20.7-5.37-2.4-8.25,4.57-15,11.65-17.74s13.76-3.64,18.42-10.38A22.08,22.08,0,0,0,44.3,7.1C43,3.47,37.23,5,38.51,8.69c2.63,7.51-.39,16.39-7.85,19.81-6.9,3.17-13.87,3.82-19.55,9.44-8.43,8.35-8.53,25.5,4.74,29.21C27.2,70.33,45.73,65.35,48,52.1c2.61-15.18-13.33-23.21-25.87-24.41-4.85-.46-11.73.33-14.81-4.33-2.4-3.63-1.4-8.69,1.24-11.85C16,2.61,29.48,6.07,39,8.58c3.74,1,5.33-4.8,1.6-5.79Z"/>
+    </g>
+    <!-- Digit 9 -->
+    <g id="digit-9" transform="translate(9, 0)">
+      <path d="M30.68,6.54c-11.44-16.33-36.08,1-29.62,18C4.13,32.68,15.54,32,22,29.15A23.32,23.32,0,0,0,36,9.49H30a495.51,495.51,0,0,1-1.25,54.89c-.3,3.85,5.7,3.83,6,0A495.51,495.51,0,0,0,36,9.49c-.13-3.89-5.72-3.83-6,0a16.8,16.8,0,0,1-7.54,12.6c-3.32,2.27-9.74,4.63-13.63,2.31C-.77,18.65,16.41-3.4,25.5,9.57c2.2,3.14,7.4.14,5.18-3Z"/>
+    </g>
+    <!-- Custom symbols -->
+    <g id="sym-comma">
+      <path fill="currentColor" d="M22,60 L28,60 L24,72 L18,72 Z" />
+    </g>
+    <g id="sym-dot">
+      <circle cx="27" cy="65" r="5" fill="currentColor" />
+    </g>
+    <g id="sym-times">
+      <path d="M18,25 L38,45 M38,25 L18,45" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none" />
+    </g>
+    <g id="sym-caret">
+      <path d="M15,35 L27,20 L39,35" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none" />
+    </g>
+    <g id="sym-lt">
+      <path d="M38,20 L18,35 L38,50" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none" />
+    </g>
+    <!-- Long Box path -->
     <g id="long-box-path">
       <path fill="currentColor" d="M6.64,14.31C9.9,31.78,3.17,49.09.77,66.23-1,78.67.06,91.49,5.58,102.92A38.3,38.3,0,0,0,34.2,124.48c8.67,1.38,17.59,1,26.34,1.17l28,.4q112.85,1.59,225.71,2.55,112.36,1,224.72,1.29,112.86.34,225.73,0,56.43-.15,112.86-.45,28-.15,55.93-.34l28-.2c8.89-.07,18.1.55,26.94-.4,14.92-1.6,18.14-14.78,15.1-27.49-1.7-7.14-4.38-13.91-5.62-21.18a91.91,91.91,0,0,1-.67-24.83,95.58,95.58,0,0,1,6.38-25c2.58-6.54,5.11-13.9,1.19-20.5C997.33-3,976.75.41,964.8.45l-225.64.69-225.64.69-224.65.68L63.22,3.19,8.31,3.36c-7.08,0-7.09,11,0,11L227,13.69,445.62,13l218.65-.67,218.65-.67,54.91-.17,27-.08c7.87,0,16.45-1,24.21.5,2.49.49,5.52,1.26,6.53,3.85,1.26,3.24-1.08,7.54-2.28,10.55a102.86,102.86,0,0,0-2.62,70.17c1.62,5,4.23,11.27,2.87,16.62-1.72,6.76-13,4.67-18.1,4.71q-27.47.21-54.93.39-54.43.35-108.87.55-109.37.41-218.74.23t-218.73-1q-109.36-.77-218.72-2.13c-36.48-.45-73-.68-109.45-1.52-7.12-.16-14.28-.71-20.45-4.6a29.29,29.29,0,0,1-10.72-13C9.56,85.09,10.54,72.23,12.94,60c3.16-16.18,7.39-32,4.31-48.59-1.3-7-11.9-4-10.61,2.92Z"/>
     </g>
@@ -69,11 +115,8 @@
       <!-- Key Size Selector -->
       <div class="flex items-center justify-between mb-6">
         <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space</label>
-        <div class="inline-flex rounded-md shadow-sm" role="group">
-          <button type="button" onclick="setKeySize(32)" id="btn-keysize-32" class="px-3 py-1.5 text-xs font-medium rounded-l-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">32-bit</button>
-          <button type="button" onclick="setKeySize(64)" id="btn-keysize-64" class="px-3 py-1.5 text-xs font-medium border-t border-b border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">64-bit</button>
-          <button type="button" onclick="setKeySize(128)" id="btn-keysize-128" class="px-3 py-1.5 text-xs font-medium border-t border-b border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">128-bit (AES)</button>
-          <button type="button" onclick="setKeySize(256)" id="btn-keysize-256" class="px-3 py-1.5 text-xs font-medium rounded-r-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300">256-bit (AES)</button>
+        <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
+          <!-- Dynamic key size buttons with SVG numbers will be injected here -->
         </div>
       </div>
 
@@ -93,7 +136,7 @@
       </div>
 
       <!-- Faint labels below the register -->
-      <div id="labels-container" class="w-full flex justify-between px-4 sm:px-6 h-32 overflow-hidden border-t border-slate-800/50 pt-2 select-none pointer-events-none">
+      <div id="labels-container" class="w-full flex justify-between px-4 sm:px-6 h-36 overflow-hidden border-t border-slate-800/50 pt-2 select-none pointer-events-none">
         <!-- Dynamic vertical power labels injected here -->
       </div>
 
@@ -136,10 +179,16 @@
                 class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 value="10"
               >
-              <div class="flex justify-between text-[10px] text-slate-500 font-mono">
-                <span>0 bits (1/sec)</span>
-                <span>64 bits (Global Hashrate)</span>
-                <span>128 bits (AES-128 Limit)</span>
+              <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+                <span class="flex items-center gap-1">
+                  <span id="slider-label-min"></span> <span class="text-[9px]">bits (1/s)</span>
+                </span>
+                <span class="flex items-center gap-1">
+                  <span id="slider-label-mid"></span> <span class="text-[9px]">bits (Global Hash)</span>
+                </span>
+                <span class="flex items-center gap-1">
+                  <span id="slider-label-max"></span> <span class="text-[9px]">bits (AES-128)</span>
+                </span>
               </div>
             </div>
           </div>
@@ -147,23 +196,8 @@
           <!-- Presets -->
           <div class="mt-6 space-y-2">
             <span class="text-xs text-slate-500 block">Real-World Comparisons:</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="setSpeed(0)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
-                <strong class="block text-[10px] text-slate-500">Manual Entry</strong>
-                1 attempt / sec (0 bits)
-              </button>
-              <button onclick="setSpeed(31.5)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
-                <strong class="block text-[10px] text-slate-500">RTX 4090 GPU (SHA-256)</strong>
-                3.0B attempts / sec (31.5 bits)
-              </button>
-              <button onclick="setSpeed(50)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
-                <strong class="block text-[10px] text-slate-500">Supercomputer Cluster</strong>
-                1.1P attempts / sec (50 bits)
-              </button>
-              <button onclick="setSpeed(69.2)" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
-                <strong class="block text-[10px] text-slate-500">Bitcoin Network Hashrate</strong>
-                670Q attempts / sec (69.2 bits)
-              </button>
+            <div id="presets-container" class="grid grid-cols-2 gap-2">
+              <!-- Dynamically filled with SVG descriptions -->
             </div>
           </div>
         </div>
@@ -186,28 +220,37 @@
           <!-- Stat: Guesses/Sec -->
           <div class="space-y-1">
             <span class="text-xs text-slate-400 block">Guesses Per Second</span>
-            <div id="stat-guesses-rate" class="text-2xl font-bold font-mono text-emerald-400">
-              1,024
+            <div id="stat-guesses-rate" class="text-2xl font-bold font-mono text-emerald-400 h-8 flex items-center">
+              <!-- Inline SVG rate -->
             </div>
-            <span class="text-[10px] text-slate-500 block">Equal to 2<sup><span id="stat-bits-exponent">10</span></sup> keys checked per second.</span>
+            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+              <span>Equal to 2</span><sup class="scale-75 -translate-y-0.5"><span id="stat-bits-exponent" class="inline-block"></span></sup><span>keys checked per second.</span>
+            </div>
           </div>
 
           <!-- Stat: Keyspace Size -->
           <div class="space-y-1">
             <span class="text-xs text-slate-400 block">Total Search Space Size</span>
-            <div id="stat-keyspace-size" class="text-lg font-bold font-mono">
-              1.84 × 10<sup>19</sup> keys
+            <div id="stat-keyspace-size" class="text-lg font-bold font-mono h-6 flex items-center">
+              <!-- Inline SVG -->
             </div>
-            <span class="text-[10px] text-slate-500 block">Total combinations for <span id="stat-keyspace-bits">64</span> bits of security.</span>
+            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+              <span>Total combinations for</span>
+              <span id="stat-keyspace-bits" class="inline-block"></span>
+              <span>bits of security.</span>
+            </div>
           </div>
 
           <!-- Stat: Time to Exhaust -->
           <div class="p-4 bg-slate-950/80 border border-slate-800 rounded-xl space-y-1">
             <span class="text-xs text-slate-400 block">Average Time to Find Key (50% Space)</span>
-            <div id="stat-time-average" class="text-xl font-bold font-mono text-amber-400">
-              --
+            <div id="stat-time-average" class="text-xl font-bold font-mono text-amber-400 flex items-center">
+              <!-- Inline SVG -->
             </div>
-            <span class="text-[10px] text-slate-500 block">Time to search 100% of keyspace: <span id="stat-time-full" class="font-mono text-slate-400">--</span></span>
+            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+              <span>Time to search 100% of keyspace:</span>
+              <span id="stat-time-full" class="font-mono text-slate-400 flex items-center"></span>
+            </div>
           </div>
         </div>
 
@@ -269,12 +312,94 @@
     const statTimeAverage = document.getElementById('stat-time-average');
     const statTimeFull = document.getElementById('stat-time-full');
 
+    // Render a string using our SVG sprite assets (monospaced look)
+    function createSVGStringHTML(str, heightClass = 'h-5') {
+      let html = `<div class="flex items-center inline-flex font-mono">`;
+      let inSup = false;
+      
+      for (let i = 0; i < str.length; i++) {
+        const char = str[i];
+        
+        // Exponent tag rendering
+        if (str.substring(i, i + 5) === '<sup>') {
+          html += `<div class="flex scale-75 -translate-y-1.5 -ml-0.5 -mr-0.5">`;
+          inSup = true;
+          i += 4;
+          continue;
+        }
+        if (str.substring(i, i + 6) === '</sup>') {
+          html += `</div>`;
+          inSup = false;
+          i += 5;
+          continue;
+        }
+        
+        if (char >= '0' && char <= '9') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#digit-${char}" /></svg>`;
+        } else if (char === ',') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-comma" /></svg>`;
+        } else if (char === '.') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-dot" /></svg>`;
+        } else if (char === '×' || char === 'x' || char === 'X') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-times" /></svg>`;
+        } else if (char === '^') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-caret" /></svg>`;
+        } else if (char === '<') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-lt" /></svg>`;
+        } else if (char === ' ') {
+          html += `<div class="w-1.5 sm:w-2"></div>`;
+        } else {
+          // Fallback to text for strings
+          html += `<span class="text-sm font-semibold text-current px-0.5">${char}</span>`;
+        }
+      }
+      
+      html += `</div>`;
+      return html;
+    }
+
+    // Render a number vertically (used for bit value labels under the register)
+    function createVerticalSVGNumberHTML(str, heightClass = 'h-2.5') {
+      let html = `<div class="vertical-digit-container">`;
+      for (let i = 0; i < str.length; i++) {
+        const char = str[i];
+        if (char >= '0' && char <= '9') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90"><use href="#digit-${char}" /></svg>`;
+        } else if (char === '.') {
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90"><use href="#sym-dot" /></svg>`;
+        } else if (char === 'e' || char === 'E') {
+          html += `<span class="text-[8px] font-bold my-0.5 text-slate-500">E</span>`;
+        }
+      }
+      html += `</div>`;
+      return html;
+    }
+
+    // Render an exponent label (e.g. 2^63)
+    function createExponentLabelHTML(exp) {
+      let html = `<div class="flex items-start text-slate-500 select-none scale-90 mb-1">`;
+      // Base '2'
+      html += `<svg class="h-3.5 aspect-[55/90] text-slate-400" viewBox="0 -10 55 90"><use href="#digit-2" /></svg>`;
+      // Exponent digits
+      html += `<div class="flex scale-75 -translate-y-1.5 -ml-0.5">`;
+      const expStr = exp.toString();
+      for (let i = 0; i < expStr.length; i++) {
+        html += `<svg class="h-3.5 aspect-[55/90] text-slate-500" viewBox="0 -10 55 90"><use href="#digit-${expStr[i]}" /></svg>`;
+      }
+      html += `</div></div>`;
+      return html;
+    }
+
     // Init UI
     function init() {
-      buildRegister();
+      // Build slider static labels in SVG
+      document.getElementById('slider-label-min').innerHTML = createSVGStringHTML('0', 'h-3 text-slate-500');
+      document.getElementById('slider-label-mid').innerHTML = createSVGStringHTML('64', 'h-3 text-slate-500');
+      document.getElementById('slider-label-max').innerHTML = createSVGStringHTML('128', 'h-3 text-slate-500');
+
+      renderPresets();
+      setKeySize(64); // Default
       updateSpeedControls();
-      updateStats();
-      setActiveKeySizeButton();
       
       // Event Listeners
       speedInput.addEventListener('input', (e) => {
@@ -292,7 +417,7 @@
         btnTogglePlay.innerText = isPlaying ? "Pause" : "Play";
         btnTogglePlay.className = isPlaying 
           ? "flex-1 bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-white"
-          : "flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-755 hover:border-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-slate-300";
+          : "flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-750 hover:border-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-slate-300";
         if (isPlaying) {
           lastTime = performance.now();
           requestAnimationFrame(loop);
@@ -309,22 +434,42 @@
       requestAnimationFrame(loop);
     }
 
-    // Set active class on keysize buttons
-    function setActiveKeySizeButton() {
-      [32, 64, 128, 256].forEach(size => {
-        const btn = document.getElementById(`btn-keysize-${size}`);
-        if (size === numBits) {
-          btn.className = "px-3 py-1.5 text-xs font-semibold border border-emerald-500/30 bg-emerald-950/50 text-emerald-400 z-10 first:rounded-l-lg last:rounded-r-lg";
-        } else {
-          btn.className = "px-3 py-1.5 text-xs font-medium border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 first:rounded-l-lg last:rounded-r-lg";
-        }
-      });
+    // Render Preset buttons dynamically with SVG numbers
+    function renderPresets() {
+      const container = document.getElementById('presets-container');
+      const presets = [
+        { speed: 0, title: "Manual Entry", valText: "1", unitText: "attempt / sec (0 bits)" },
+        { speed: 31.5, title: "RTX 4090 GPU (SHA-256)", valText: "3.0", unitText: "B attempts / sec (31.5 bits)" },
+        { speed: 50, title: "Supercomputer Cluster", valText: "1.1", unitText: "P attempts / sec (50.5 bits)" },
+        { speed: 69.2, title: "Bitcoin Network Hashrate", valText: "670", unitText: "Q attempts / sec (69.2 bits)" }
+      ];
+
+      container.innerHTML = presets.map((p, idx) => {
+        // Render values inside presets
+        const svgVal = createSVGStringHTML(p.valText, 'h-3 text-slate-300');
+        // Extract bit value
+        const bitVal = p.speed.toFixed(1);
+        const svgBits = createSVGStringHTML(bitVal, 'h-3 text-slate-400');
+        
+        return `
+          <button onclick="setSpeed(${p.speed})" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
+            <strong class="block text-[10px] text-slate-500">${p.title}</strong>
+            <span class="flex items-center flex-wrap gap-1 mt-0.5">
+              ${svgVal} 
+              <span class="text-[10px] text-slate-400 font-sans">${p.unitText.split('(')[0]}</span>
+              <span class="text-[9px] text-slate-500 font-sans flex items-center">
+                (${svgBits} <span class="ml-0.5">bits</span>)
+              </span>
+            </span>
+          </button>
+        `;
+      }).join('');
     }
 
     // Change Key Size
     function setKeySize(bits) {
       numBits = bits;
-      setActiveKeySizeButton();
+      renderKeySizeButtons();
       buildRegister();
       updateStats();
       // Reset counter on change to prevent overflow index errors
@@ -332,29 +477,39 @@
       prevBits.fill(null);
     }
 
+    // Render key size selection buttons
+    function renderKeySizeButtons() {
+      const container = document.getElementById('keysize-buttons-container');
+      const sizes = [32, 64, 128, 256];
+      container.innerHTML = sizes.map(size => {
+        const isActive = size === numBits;
+        const activeClass = isActive 
+          ? "border-emerald-500/30 bg-emerald-950/50 text-emerald-400 z-10" 
+          : "border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300";
+        const svgSize = createSVGStringHTML(size.toString(), 'h-3 inline-block ' + (isActive ? 'text-emerald-400' : 'text-slate-400'));
+        return `<button type="button" onclick="setKeySize(${size})" id="btn-keysize-${size}" class="px-3 py-1.5 text-xs flex items-center border bg-slate-850 hover:bg-slate-800 transition first:rounded-l-lg last:rounded-r-lg ${activeClass}">
+          ${svgSize}<span class="ml-1"> -bit</span>
+        </button>`;
+      }).join('');
+    }
+
     // Build DOM elements for each bit
     function buildRegister() {
       registerGrid.innerHTML = '';
       labelsContainer.innerHTML = '';
       
-      // Calculate widths and intervals dynamically
-      // For large sizes (e.g. 256), we want them tight
       const labelInterval = numBits <= 32 ? 1 : (numBits <= 64 ? 2 : (numBits <= 128 ? 8 : 16));
 
       // Loop from MSB to LSB (left to right)
       for (let i = numBits - 1; i >= 0; i--) {
-        // Create bit container (column)
         const col = document.createElement('div');
         col.className = "flex flex-col items-center flex-grow flex-shrink basis-0 h-full justify-between";
         
-        // Digit Wrapper
         const digitWrap = document.createElement('div');
         digitWrap.className = "w-full h-10 flex items-center justify-center relative";
         
-        // SVG representation using inline sprite references
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 -10 45 90');
-        // Fit width of columns
         svg.className = 'digit-svg w-full h-full max-h-8 max-w-[28px] val-0';
         svg.id = `bit-svg-${i}`;
         
@@ -374,17 +529,14 @@
         
         // Show labels only at specific intervals to prevent overcrowding
         if (i % labelInterval === 0 || i === 0) {
-          // Exponent e.g. 2^0, 2^8
-          const exp = document.createElement('div');
-          exp.className = "text-[9px] text-slate-600 font-bold mb-1";
-          exp.innerHTML = `2<sup>${i}</sup>`;
-          labelCol.appendChild(exp);
+          labelCol.innerHTML = createExponentLabelHTML(i);
 
           // Value vertical representation
-          const val = document.createElement('div');
-          val.className = "vertical-text tracking-[1.5px] text-[8px] opacity-40 font-mono text-slate-400 mt-1 uppercase";
-          val.innerText = formatExponentValue(i);
-          labelCol.appendChild(val);
+          const valStr = formatExponentValue(i);
+          const valDiv = document.createElement('div');
+          valDiv.className = "mt-1 opacity-40 hover:opacity-80 transition text-slate-400";
+          valDiv.innerHTML = createVerticalSVGNumberHTML(valStr, 'h-2.5');
+          labelCol.appendChild(valDiv);
         } else {
           // Just a dot/marker
           const dot = document.createElement('div');
@@ -402,23 +554,20 @@
     // Return numerical text value of the exponent
     function formatExponentValue(exp) {
       if (exp === 0) return "1";
-      // BigInt exponentiation is exact
       const val = 1n << BigInt(exp);
       const str = val.toString();
       if (str.length > 15) {
-        // Return shorthand for huge numbers: 1.23e38 => "1.2E38"
+        // Return shorthand for huge numbers: 1.2E38
         const log10Val = exp * 0.30103;
         const e10 = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - e10);
-        return `${mantissa.toFixed(1)}e${e10}`;
+        return `${mantissa.toFixed(1)}E${e10}`;
       }
-      // Insert commas for readability in vertical display
       return str;
     }
 
     // Set simulation speed
     function setSpeed(val, source) {
-      // Clamp between 0 and 256
       speed = Math.max(0, Math.min(256, val));
       
       if (source !== 'input') speedInput.value = speed.toFixed(1);
@@ -438,94 +587,93 @@
       speedSlider.value = speed;
     }
 
-    // Calculations & Statistics Updates
+    // Calculations & Statistics Updates (using SVG inlining)
     function updateStats() {
-      // 1. Guesses/Sec
+      // 1. Guesses/Sec (Large numbers render as scientific notation)
       if (speed < 50) {
         const rate = Math.round(Math.pow(2, speed));
-        statGuessesRate.innerText = rate.toLocaleString();
+        statGuessesRate.innerHTML = createSVGStringHTML(rate.toLocaleString(), 'h-7 text-emerald-400');
       } else {
-        const log10Val = speed * 0.30102999566398114; // log10(2)
+        const log10Val = speed * 0.30102999566398114;
         const exp = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - exp);
-        statGuessesRate.innerText = `${mantissa.toFixed(3)} × 10¹³`.replace('¹³', getSuperscriptString(exp));
+        statGuessesRate.innerHTML = createSVGStringHTML(`${mantissa.toFixed(3)} × 10<sup>${exp}</sup>`, 'h-7 text-emerald-400');
       }
-      statBitsExponent.innerText = speed.toFixed(1);
+      statBitsExponent.innerHTML = createSVGStringHTML(speed.toFixed(1), 'h-3.5 text-slate-400');
 
       // 2. Search Space Size
       const logSpace = numBits * 0.30102999566398114;
       const expSpace = Math.floor(logSpace);
       const mantSpace = Math.pow(10, logSpace - expSpace);
-      statKeyspaceSize.innerHTML = `${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup> keys`;
-      statKeyspaceBits.innerText = numBits;
+      statKeyspaceSize.innerHTML = createSVGStringHTML(`${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup>`, 'h-5.5 text-slate-100') + ' <span class="text-xs text-slate-400 ml-1">keys</span>';
+      statKeyspaceBits.innerHTML = createSVGStringHTML(numBits.toString(), 'h-3.5 text-slate-400');
 
       // 3. Time calculation
-      // Time = 2^(numBits - speed)
       const diffExponent = numBits - speed;
       
-      statTimeAverage.innerHTML = formatTime(diffExponent - 1); // 50% search space average
-      statTimeFull.innerHTML = formatTime(diffExponent); // 100% search space
+      const timeAvg = formatTimeObj(diffExponent - 1); // 50% search space average
+      statTimeAverage.innerHTML = createSVGStringHTML(timeAvg.val, 'h-6 text-amber-400') + ` <span class="text-xs text-slate-400 ml-1">${timeAvg.unit}</span>`;
+      
+      const timeFull = formatTimeObj(diffExponent); // 100% search space
+      statTimeFull.innerHTML = createSVGStringHTML(timeFull.val, 'h-4 text-slate-300') + ` <span class="text-[10px] text-slate-500 ml-1 font-sans">${timeFull.unit}</span>`;
     }
 
-    // Helper to generate unicode superscript exponents
-    function getSuperscriptString(num) {
-      const sups = {
-        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', 
-        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹'
-      };
-      return num.toString().split('').map(char => sups[char] || char).join('');
-    }
-
-    // Format exponent difference into human readable time duration
-    function formatTime(exponent) {
+    // Format exponent difference into a value-and-unit object
+    function formatTimeObj(exponent) {
       if (exponent < 0) {
-        return "Instantaneous (< 1ms)";
+        return { val: "< 1", unit: "millisecond" };
       }
       // If exponent is small enough (under 30), calculate exact seconds
       if (exponent <= 30) {
         const seconds = Math.pow(2, exponent);
-        return formatSeconds(seconds);
+        return formatSecondsObj(seconds);
       }
 
-      // Convert larger exponents into Years (1 Year ≈ 2^24.9 seconds)
+      // Convert larger exponents into Years (1 Year ≈ 2^24.9088 seconds)
       const expYears = exponent - 24.9088;
       const years = Math.pow(2, expYears);
 
       // Age of the universe ≈ 13.8 billion years ≈ 2^33.68 years
       if (years < 1000) {
-        return `${years.toFixed(1)} years`;
+        return { val: years.toFixed(1), unit: "years" };
       } else if (years < 1e6) {
-        return `${(years/1000).toFixed(1)} thousand years`;
+        return { val: (years/1000).toFixed(1), unit: "thousand years" };
       } else if (years < 1e9) {
-        return `${(years/1e6).toFixed(1)} million years`;
+        return { val: (years/1e6).toFixed(1), unit: "million years" };
       } else if (years < 1.38e10) {
-        return `${(years/1e9).toFixed(1)} billion years`;
+        return { val: (years/1e9).toFixed(1), unit: "billion years" };
       }
 
-      // Beyond: express in Lifetimes of the Universe (13.8 Billion Years = 1.38e10 Years)
-      const expUniverses = exponent - 58.593; // 2^58.593 seconds
+      // Beyond: express in Lifetimes of the Universe (13.8 Billion Years = 2^58.593 seconds)
+      const expUniverses = exponent - 58.593;
       if (expUniverses < 30) {
         const universes = Math.pow(2, expUniverses);
-        return `${universes.toLocaleString(undefined, {maximumFractionDigits: 1})} ages of the universe`;
+        return { 
+          val: universes.toLocaleString(undefined, {maximumFractionDigits: 1}), 
+          unit: "ages of the universe" 
+        };
       } else {
         // Scientific notation for incredibly vast times
         const log10Val = expUniverses * 0.30103;
         const exp10 = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - exp10);
-        return `${mantissa.toFixed(2)} × 10<sup>${exp10}</sup> ages of the universe`;
+        return { 
+          val: `${mantissa.toFixed(2)} × 10<sup>${exp10}</sup>`, 
+          unit: "ages of the universe" 
+        };
       }
     }
 
-    function formatSeconds(s) {
-      if (s < 0.001) return "< 1 millisecond";
-      if (s < 1) return `${(s * 1000).toFixed(0)} milliseconds`;
-      if (s < 60) return `${s.toFixed(1)} seconds`;
+    function formatSecondsObj(s) {
+      if (s < 0.001) return { val: "< 1", unit: "millisecond" };
+      if (s < 1) return { val: (s * 1000).toFixed(0), unit: "milliseconds" };
+      if (s < 60) return { val: s.toFixed(1), unit: "seconds" };
       const m = s / 60;
-      if (m < 60) return `${m.toFixed(1)} minutes`;
+      if (m < 60) return { val: m.toFixed(1), unit: "minutes" };
       const h = m / 60;
-      if (h < 24) return `${h.toFixed(1)} hours`;
+      if (h < 24) return { val: h.toFixed(1), unit: "hours" };
       const d = h / 24;
-      return `${d.toFixed(1)} days`;
+      return { val: d.toFixed(1), unit: "days" };
     }
 
     // Main Simulation Loop
@@ -537,25 +685,18 @@
 
       // Update simulation counter
       if (speed >= 0) {
-        // Compute increment for this frame: dt * 2^speed
-        // Since we support floats, interpolate 2^speed.
         const intSpeed = Math.floor(speed);
         const fracSpeed = speed - intSpeed;
         const multiplier = Math.pow(2, fracSpeed);
         
-        // Calculate scaled increment: (dt * multiplier * 2^32) * 2^intSpeed
-        // Using microsecond scaling to avoid floating point issues
+        // Calculate scaled increment
         const dtUs = BigInt(Math.round(dt * multiplier * 1000000));
-        
-        // Scaled increment is dtUs * 2^(intSpeed + 32) / 1,000,000
         const shiftAmount = BigInt(intSpeed) + SCALE_SHIFT;
         
-        // Prevent shifting overflow. Limit shifting size based on Max Bits
         if (shiftAmount < 300n) {
           const scaledInc = (dtUs * (1n << shiftAmount)) / 1000000n;
           scaledCounter += scaledInc;
         } else {
-          // Extremely fast speed, counter is essentially infinite. Just cap increment.
           scaledCounter += (1n << 256n) * SCALE_VAL;
         }
       }
@@ -571,8 +712,6 @@
 
     // Render bit SVGs based on counter + randomized spin bits
     function renderBits(counter) {
-      // Anything flipping faster than ~30Hz (i.e. index below speed - 5.9)
-      // will be randomized on every frame to simulate spinning/blur.
       const blurThreshold = speed - 5.9;
 
       for (let i = 0; i < numBits; i++) {
@@ -580,15 +719,12 @@
         let isSpinning = false;
 
         if (i < blurThreshold) {
-          // Randomize to simulate visual blur
           bitVal = Math.random() > 0.5 ? 1 : 0;
           isSpinning = true;
         } else {
-          // Read actual bit value from the simulation counter
           bitVal = Number((counter >> BigInt(i)) & 1n);
         }
 
-        // Only touch DOM if state changed
         const cacheKey = isSpinning ? `spin-${i}-${bitVal}` : `bit-${i}-${bitVal}`;
         if (prevBits[i] !== cacheKey) {
           const useEl = document.getElementById(`bit-use-${i}`);
@@ -596,8 +732,6 @@
           
           if (useEl && svgEl) {
             useEl.setAttribute('href', `#digit-${bitVal}`);
-            
-            // Apply colors and blur CSS classes
             svgEl.setAttribute('class', `digit-svg w-full h-full max-h-8 max-w-[28px] val-${bitVal} ${isSpinning ? 'spinning' : ''}`);
           }
           prevBits[i] = cacheKey;
