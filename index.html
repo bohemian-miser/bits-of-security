@@ -7,22 +7,38 @@
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom styles */
+    /* Custom scrollbar styling for light theme */
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: #f1f5f9; /* slate-100 */
+      border-radius: 3px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #cbd5e1; /* slate-300 */
+      border-radius: 3px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8; /* slate-400 */
+    }
+
     .digit-svg {
       transition: fill 0.1s ease, filter 0.1s ease;
     }
+    /* Style for 0 in light theme */
     .val-0 {
-      fill: #38bdf8; /* sky-400 */
-      filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.4));
+      fill: #0284c7; /* sky-600 */
+      filter: drop-shadow(0 0 2px rgba(2, 132, 199, 0.2));
     }
+    /* Style for 1 in light theme */
     .val-1 {
-      fill: #10b981; /* emerald-500 */
-      filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.6));
+      fill: #059669; /* emerald-600 */
+      filter: drop-shadow(0 0 3px rgba(5, 150, 105, 0.3));
     }
     .spinning {
       filter: blur(2px) opacity(0.6) !important;
     }
-    /* Simple vertical layout for number stacking */
     .vertical-digit-container {
       display: flex;
       flex-direction: column;
@@ -30,48 +46,48 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans selection:bg-emerald-500/30">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans selection:bg-emerald-100">
 
-  <!-- SVG Sprite Definitions (Hidden) -->
+  <!-- SVG Sprite Definitions (Hidden, Shifted down and centered) -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <!-- Digit 0 -->
-    <g id="digit-0" transform="translate(6, 0)">
+    <g id="digit-0" transform="translate(6, 8)">
       <path d="M17.1,6.52C6.52,12.23,1.14,23.32.16,35c-.93,11.09,2,26.65,12,33.22,12.18,8,25.55-3.47,30.88-14.19,6.39-12.84,8.33-29.94,2.34-43.32C38.31-5.2,20.35-1.5,10.56,9.6,8,12.49,12.24,16.75,14.8,13.85,19,9,26,4,32.79,6,40.12,8.22,42,17.82,42.65,24.4,43.91,37.67,40,55.74,27.44,62.87,13,71.07,6.41,51.13,6,40.22,5.65,28.92,9.74,17.3,20.13,11.7c3.4-1.83.37-7-3-5.18Z"/>
     </g>
-    <!-- Digit 1 -->
-    <g id="digit-1" transform="translate(23, 5)">
+    <!-- Digit 1 (translated down by 11 to align center with 0) -->
+    <g id="digit-1" transform="translate(23, 11)">
       <path d="M2.38,2.9A447.69,447.69,0,0,1,0,62.44c-.41,3.83,5.59,3.81,6,0A447.69,447.69,0,0,0,8.38,2.9c-.1-3.85-6.1-3.87-6,0Z"/>
     </g>
     <!-- Digit 2 -->
-    <g id="digit-2" transform="translate(7, 0)">
+    <g id="digit-2" transform="translate(7, 8)">
       <path d="M8.41,12.11A15.59,15.59,0,0,1,29.15,8.45c6.49,4.3,9,12.93,7,20.24C31.9,43.77,15.89,55.83,2,61.28l1.6,5.79a53.63,53.63,0,0,1,39.84-.93c3.63,1.34,5.19-4.46,1.6-5.79a58.64,58.64,0,0,0-43,.93c-3.48,1.46-2,7.21,1.6,5.79A71,71,0,0,0,30.36,49c6.91-7.58,13.5-17.29,12.35-28-1-9.1-7.09-17.71-16.14-20.19A21.74,21.74,0,0,0,3.23,9.08c-2.27,3.13,2.94,6.13,5.18,3Z"/>
     </g>
     <!-- Digit 3 -->
-    <g id="digit-3" transform="translate(6, 0)">
+    <g id="digit-3" transform="translate(6, 8)">
       <path d="M5.26,15c4.67-3.83,9.94-8.29,16.21-9,5.52-.59,11,2.05,11.77,8C34.8,26.36,21,32,11.74,35.49L14.05,41c11-6.12,24,3.61,21.7,15.84C33.24,70.2,17,73.81,7.37,65.33,4.48,62.79.22,67,3.12,69.57,16.55,81.39,38.88,75.8,41.77,57.09,44.39,40.1,26,27.45,11,35.79c-2.9,1.61-.93,6.7,2.31,5.48,12.72-4.77,31.21-14.65,25-31.53C36,3.31,29.54-.09,22.89,0,14.3.12,7.35,5.6,1,10.8-2,13.25,2.29,17.47,5.26,15Z"/>
     </g>
     <!-- Digit 4 -->
-    <g id="digit-4" transform="translate(12, 0)">
+    <g id="digit-4" transform="translate(12, 8)">
       <path d="M3.94,2.16A184.26,184.26,0,0,0,.53,25.89C.18,30.57-1.64,38.4,4.42,40c3.18.85,7.21.08,10.43,0l12-.36,25.94-.78c3.85-.12,3.87-6.12,0-6L13.85,34c-1.86.06-6.57,1.18-7.73-.43-1-1.33.43-8.08.56-9.64a172.58,172.58,0,0,1,3-20.21c.78-3.77-5-5.38-5.79-1.6ZM23.87,11.55,23,63.85c-.07,3.86,5.93,3.86,6,0l.91-52.29c.07-3.86-5.93-3.86-6,0Z"/>
     </g>
     <!-- Digit 5 -->
-    <g id="digit-5" transform="translate(7, 0)">
+    <g id="digit-5" transform="translate(7, 8)">
       <path d="M3.85,9.79l1.6,30.07c.15,2.9,4,4.17,5.59,1.51A12.2,12.2,0,0,1,27,37c5.71,3,8.23,10.36,7,16.45S28,64.53,22.49,67.22c-3.21,1.57-7.51,2.94-10.92,1.25s-4.92-5.51-5.7-9C5,55.75-.76,57.34.08,61.11,2.36,71.24,10.55,77.43,20.89,74.26,30.22,71.41,38.43,63.6,40,53.73c1.42-9-3-19.11-11.67-22.71A18.22,18.22,0,0,0,5.86,38.35l5.59,1.51L9.85,9.79c-.2-3.84-6.21-3.87-6,0ZM11.16,13.16a30.54,30.54,0,0,1,25-6.8c3.78.65,5.4-5.13,1.6-5.79A37.08,37.08,0,0,0,6.92,8.92c-3,2.49,1.31,6.72,4.24,4.24Z"/>
     </g>
     <!-- Digit 6 -->
-    <g id="digit-6" transform="translate(7, 0)">
+    <g id="digit-6" transform="translate(7, 8)">
       <path d="M34.12,1.07c-32.95-9.6-47.85,48.46-18,60.74C28,66.72,43.36,58.67,39.91,44.49,36.3,29.65,18.79,28.72,8.42,36.85c-3,2.38,1.24,6.6,4.24,4.24,7.5-5.87,21.67-4.49,21.73,7.27,0,5.43-4.67,8.71-9.73,9-4.85.3-9.48-2.19-12.71-5.67C-1.44,37.32,9.12,0,32.52,6.85c3.71,1.08,5.3-4.71,1.6-5.79Z"/>
     </g>
     <!-- Digit 7 -->
-    <g id="digit-7" transform="translate(2, 0)">
+    <g id="digit-7" transform="translate(2, 8)">
       <path d="M2.89,6,48,7.75,45.83,2.63A142.75,142.75,0,0,0,13.65,59.44c-1.09,3.71,4.7,5.3,5.79,1.6A136,136,0,0,1,50.07,6.87,3,3,0,0,0,48,1.75L2.89,0C-1-.15-1,5.85,2.89,6Z"/>
     </g>
     <!-- Digit 8 -->
-    <g id="digit-8" transform="translate(3, 0)">
+    <g id="digit-8" transform="translate(3, 8)">
       <path d="M40.56,2.8C28-.53,9.75-3.54,2.06,10.33a16.41,16.41,0,0,0-.21,15.53c3.22,5.75,9.44,7.07,15.54,7.52C25.7,34,35.51,35,40.27,42.89s-.15,15-8.08,17.49c-7,2.21-18.16,3.38-20.7-5.37-2.4-8.25,4.57-15,11.65-17.74s13.76-3.64,18.42-10.38A22.08,22.08,0,0,0,44.3,7.1C43,3.47,37.23,5,38.51,8.69c2.63,7.51-.39,16.39-7.85,19.81-6.9,3.17-13.87,3.82-19.55,9.44-8.43,8.35-8.53,25.5,4.74,29.21C27.2,70.33,45.73,65.35,48,52.1c2.61-15.18-13.33-23.21-25.87-24.41-4.85-.46-11.73.33-14.81-4.33-2.4-3.63-1.4-8.69,1.24-11.85C16,2.61,29.48,6.07,39,8.58c3.74,1,5.33-4.8,1.6-5.79Z"/>
     </g>
     <!-- Digit 9 -->
-    <g id="digit-9" transform="translate(9, 0)">
+    <g id="digit-9" transform="translate(9, 8)">
       <path d="M30.68,6.54c-11.44-16.33-36.08,1-29.62,18C4.13,32.68,15.54,32,22,29.15A23.32,23.32,0,0,0,36,9.49H30a495.51,495.51,0,0,1-1.25,54.89c-.3,3.85,5.7,3.83,6,0A495.51,495.51,0,0,0,36,9.49c-.13-3.89-5.72-3.83-6,0a16.8,16.8,0,0,1-7.54,12.6c-3.32,2.27-9.74,4.63-13.63,2.31C-.77,18.65,16.41-3.4,25.5,9.57c2.2,3.14,7.4.14,5.18-3Z"/>
     </g>
     <!-- Custom symbols -->
@@ -101,43 +117,50 @@
     
     <!-- Header -->
     <header class="text-center space-y-2">
-      <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
+      <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
         Bits of Security
       </h1>
-      <p class="text-slate-400 max-w-lg mx-auto text-sm sm:text-base">
+      <p class="text-slate-500 max-w-lg mx-auto text-sm sm:text-base">
         Visualize the scale of cryptographic keys. Adjust the brute-force speed to see how long it takes to exhaust the search space.
       </p>
     </header>
 
-    <!-- Visualizer Section -->
-    <section class="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+    <!-- Visualizer Section (White Card Theme) -->
+    <section class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl">
       
       <!-- Key Size Selector -->
       <div class="flex items-center justify-between mb-6">
         <label for="keysize-select" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Search Space</label>
         <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
-          <!-- Dynamic key size buttons with SVG numbers will be injected here -->
+          <!-- Dynamic key size buttons with SVG numbers injected here -->
         </div>
       </div>
 
-      <!-- The Binary Register Box -->
-      <div class="relative w-full mb-4">
-        <!-- SVG Frame (long box background) -->
-        <div class="absolute inset-0 w-full h-20 text-slate-800 pointer-events-none">
-          <svg viewBox="0 0 1006.78 130.08" class="w-full h-full" preserveAspectRatio="none">
-            <use href="#long-box-path" />
-          </svg>
-        </div>
+      <!-- Scrollable Assembly for the Odometer Box and Labels -->
+      <div class="w-full overflow-x-auto pb-4 scrollbar-thin">
+        <div id="scrollable-content" class="relative mx-auto">
+          
+          <!-- The Binary Register Box (Increased height to 96px for bigger/lower numbers) -->
+          <div id="register-box-wrapper" class="relative w-full" style="height: 96px;">
+            <!-- SVG Frame background (text-slate-350 for light hand-drawn border) -->
+            <div class="absolute inset-0 w-full h-full text-slate-350 pointer-events-none">
+              <svg viewBox="0 0 1006.78 130.08" class="w-full h-full" preserveAspectRatio="none">
+                <use href="#long-box-path" />
+              </svg>
+            </div>
 
-        <!-- Digits Grid -->
-        <div id="register-grid" class="relative z-10 w-full h-20 flex justify-between items-center px-4 sm:px-6">
-          <!-- Dynamic bit columns will be injected here by JS -->
-        </div>
-      </div>
+            <!-- Digits Grid -->
+            <div id="register-grid" class="relative z-10 w-full h-full flex justify-between items-center px-8">
+              <!-- Dynamic bit columns will be injected here by JS -->
+            </div>
+          </div>
 
-      <!-- Faint labels below the register -->
-      <div id="labels-container" class="w-full flex justify-between px-4 sm:px-6 h-36 overflow-hidden border-t border-slate-800/50 pt-2 select-none pointer-events-none">
-        <!-- Dynamic vertical power labels injected here -->
+          <!-- Faint labels below the register (inside the scroll wrapper so they align) -->
+          <div id="labels-container" class="w-full flex justify-between px-8 h-32 overflow-hidden border-t border-slate-200/60 pt-2 select-none pointer-events-none">
+            <!-- Dynamic vertical power labels injected here -->
+          </div>
+
+        </div>
       </div>
 
     </section>
@@ -146,14 +169,14 @@
     <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
       
       <!-- Controls -->
-      <div class="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 space-y-6 flex flex-col justify-between">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 space-y-6 flex flex-col justify-between shadow-md">
         <div>
           <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">Simulation Control</h3>
           
           <div class="space-y-4">
             <!-- Speed Input & Navigation -->
             <div class="flex items-center justify-between gap-4">
-              <label for="speed-input" class="text-sm text-slate-300">Brute Force Speed:</label>
+              <label for="speed-input" class="text-sm text-slate-600">Brute Force Speed:</label>
               <div class="flex items-center gap-2">
                 <input 
                   type="number" 
@@ -161,10 +184,10 @@
                   min="0" 
                   max="256" 
                   step="1" 
-                  class="bg-slate-850 border border-slate-750 rounded-lg px-3 py-1.5 text-right w-24 text-emerald-400 font-mono focus:outline-none focus:border-emerald-500 text-lg"
+                  class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-right w-24 text-sky-600 font-mono focus:outline-none focus:border-sky-500 text-lg"
                   value="10"
                 >
-                <span class="text-sm text-slate-400">bits / sec</span>
+                <span class="text-sm text-slate-500 font-sans">bits / sec</span>
               </div>
             </div>
 
@@ -176,10 +199,10 @@
                 min="0" 
                 max="128" 
                 step="0.1" 
-                class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
                 value="10"
               >
-              <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
                 <span class="flex items-center gap-1">
                   <span id="slider-label-min"></span> <span class="text-[9px]">bits (1/s)</span>
                 </span>
@@ -195,46 +218,46 @@
 
           <!-- Presets -->
           <div class="mt-6 space-y-2">
-            <span class="text-xs text-slate-500 block">Real-World Comparisons:</span>
+            <span class="text-xs text-slate-400 block font-semibold">Real-World Comparisons:</span>
             <div id="presets-container" class="grid grid-cols-2 gap-2">
               <!-- Dynamically filled with SVG descriptions -->
             </div>
           </div>
         </div>
 
-        <div class="flex gap-3 mt-6 pt-4 border-t border-slate-800/50">
-          <button id="btn-reset" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 px-4 py-2.5 rounded-xl font-semibold text-sm transition">
+        <div class="flex gap-3 mt-6 pt-4 border-t border-slate-100">
+          <button id="btn-reset" class="flex-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition">
             Reset Counter
           </button>
-          <button id="btn-toggle-play" class="flex-1 bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-white">
+          <button id="btn-toggle-play" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition">
             Pause
           </button>
         </div>
       </div>
 
       <!-- Stats Panel -->
-      <div class="bg-slate-900/30 border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-md">
         <div class="space-y-6">
           <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Simulation Statistics</h3>
 
           <!-- Stat: Guesses/Sec -->
           <div class="space-y-1">
-            <span class="text-xs text-slate-400 block">Guesses Per Second</span>
-            <div id="stat-guesses-rate" class="text-2xl font-bold font-mono text-emerald-400 h-8 flex items-center">
+            <span class="text-xs text-slate-500 block font-medium">Guesses Per Second</span>
+            <div id="stat-guesses-rate" class="text-2xl font-bold font-mono text-sky-600 h-8 flex items-center">
               <!-- Inline SVG rate -->
             </div>
-            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+            <div class="text-[10px] text-slate-400 flex items-center gap-1">
               <span>Equal to 2</span><sup class="scale-75 -translate-y-0.5"><span id="stat-bits-exponent" class="inline-block"></span></sup><span>keys checked per second.</span>
             </div>
           </div>
 
           <!-- Stat: Keyspace Size -->
           <div class="space-y-1">
-            <span class="text-xs text-slate-400 block">Total Search Space Size</span>
-            <div id="stat-keyspace-size" class="text-lg font-bold font-mono h-6 flex items-center">
+            <span class="text-xs text-slate-500 block font-medium">Total Search Space Size</span>
+            <div id="stat-keyspace-size" class="text-lg font-bold font-mono h-6 flex items-center text-slate-800">
               <!-- Inline SVG -->
             </div>
-            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+            <div class="text-[10px] text-slate-400 flex items-center gap-1">
               <span>Total combinations for</span>
               <span id="stat-keyspace-bits" class="inline-block"></span>
               <span>bits of security.</span>
@@ -242,20 +265,20 @@
           </div>
 
           <!-- Stat: Time to Exhaust -->
-          <div class="p-4 bg-slate-950/80 border border-slate-800 rounded-xl space-y-1">
-            <span class="text-xs text-slate-400 block">Average Time to Find Key (50% Space)</span>
-            <div id="stat-time-average" class="text-xl font-bold font-mono text-amber-400 flex items-center">
+          <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1 shadow-inner">
+            <span class="text-xs text-slate-500 block font-medium">Average Time to Find Key (50% Space)</span>
+            <div id="stat-time-average" class="text-xl font-bold font-mono text-amber-600 flex items-center">
               <!-- Inline SVG -->
             </div>
-            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+            <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
               <span>Time to search 100% of keyspace:</span>
-              <span id="stat-time-full" class="font-mono text-slate-400 flex items-center"></span>
+              <span id="stat-time-full" class="font-mono text-slate-500 flex items-center"></span>
             </div>
           </div>
         </div>
 
-        <div class="text-[11px] text-slate-500 mt-6 leading-relaxed">
-          <span class="text-emerald-500 font-semibold">Tip:</span> Hold the <span class="bg-slate-800 px-1 py-0.5 rounded text-slate-300">▲ Arrow Up</span> or <span class="bg-slate-800 px-1 py-0.5 rounded text-slate-300">▼ Arrow Down</span> keys anywhere on the page to change the brute-force speed smoothly.
+        <div class="text-[11px] text-slate-400 mt-6 leading-relaxed">
+          <span class="text-sky-600 font-semibold">Tip:</span> Hold the <span class="bg-slate-200 px-1 py-0.5 rounded text-slate-700">▲ Arrow Up</span> or <span class="bg-slate-200 px-1 py-0.5 rounded text-slate-700">▼ Arrow Down</span> keys anywhere on the page to change the brute-force speed smoothly.
         </div>
       </div>
 
@@ -264,13 +287,13 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 mt-12 bg-slate-950">
+  <footer class="border-t border-slate-200 py-6 text-center text-xs text-slate-400 mt-12 bg-white">
     <div class="container mx-auto px-4 space-y-2">
       <p>
-        Created by <a href="https://github.com/bohemian-miser" class="text-slate-400 hover:text-emerald-400 underline transition">bohemian-miser</a> &bull; 
-        <a href="https://github.com/bohemian-miser/bits-of-security" class="text-slate-400 hover:text-emerald-400 underline transition">GitHub Repository</a>
+        Created by <a href="https://github.com/bohemian-miser" class="text-slate-600 hover:text-sky-600 underline transition font-medium">bohemian-miser</a> &bull; 
+        <a href="https://github.com/bohemian-miser/bits-of-security" class="text-slate-600 hover:text-sky-600 underline transition font-medium">GitHub Repository</a>
       </p>
-      <p class="text-[10px] text-slate-600">
+      <p class="text-[10px] text-slate-400">
         Demo intended to build mathematical intuition about exponential growth & cryptanalysis resistance.
       </p>
     </div>
@@ -312,7 +335,7 @@
     const statTimeAverage = document.getElementById('stat-time-average');
     const statTimeFull = document.getElementById('stat-time-full');
 
-    // Render a string using our SVG sprite assets (monospaced look)
+    // Render a string using our SVG sprite assets (monospaced look, light theme default)
     function createSVGStringHTML(str, heightClass = 'h-5') {
       let html = `<div class="flex items-center inline-flex font-mono">`;
       let inSup = false;
@@ -335,17 +358,17 @@
         }
         
         if (char >= '0' && char <= '9') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#digit-${char}" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110" style="display:inline-block;"><use href="#digit-${char}" /></svg>`;
         } else if (char === ',') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-comma" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110" style="display:inline-block;"><use href="#sym-comma" /></svg>`;
         } else if (char === '.') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-dot" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110" style="display:inline-block;"><use href="#sym-dot" /></svg>`;
         } else if (char === '×' || char === 'x' || char === 'X') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-times" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110" style="display:inline-block;"><use href="#sym-times" /></svg>`;
         } else if (char === '^') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-caret" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110" style="display:inline-block;"><use href="#sym-caret" /></svg>`;
         } else if (char === '<') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90" style="display:inline-block;"><use href="#sym-lt" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110" style="display:inline-block;"><use href="#sym-lt" /></svg>`;
         } else if (char === ' ') {
           html += `<div class="w-1.5 sm:w-2"></div>`;
         } else {
@@ -359,16 +382,16 @@
     }
 
     // Render a number vertically (used for bit value labels under the register)
-    function createVerticalSVGNumberHTML(str, heightClass = 'h-2.5') {
+    function createVerticalSVGNumberHTML(str, heightClass = 'h-2') {
       let html = `<div class="vertical-digit-container">`;
       for (let i = 0; i < str.length; i++) {
         const char = str[i];
         if (char >= '0' && char <= '9') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90"><use href="#digit-${char}" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110"><use href="#digit-${char}" /></svg>`;
         } else if (char === '.') {
-          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 90"><use href="#sym-dot" /></svg>`;
+          html += `<svg class="${heightClass} aspect-[55/90] text-current" viewBox="0 -10 55 110"><use href="#sym-dot" /></svg>`;
         } else if (char === 'e' || char === 'E') {
-          html += `<span class="text-[8px] font-bold my-0.5 text-slate-500">E</span>`;
+          html += `<span class="text-[7px] font-bold my-0.5 text-slate-400">E</span>`;
         }
       }
       html += `</div>`;
@@ -377,14 +400,14 @@
 
     // Render an exponent label (e.g. 2^63)
     function createExponentLabelHTML(exp) {
-      let html = `<div class="flex items-start text-slate-500 select-none scale-90 mb-1">`;
+      let html = `<div class="flex items-start text-slate-400 select-none scale-90 mb-1">`;
       // Base '2'
-      html += `<svg class="h-3.5 aspect-[55/90] text-slate-400" viewBox="0 -10 55 90"><use href="#digit-2" /></svg>`;
+      html += `<svg class="h-3.5 aspect-[55/90] text-slate-400" viewBox="0 -10 55 110"><use href="#digit-2" /></svg>`;
       // Exponent digits
       html += `<div class="flex scale-75 -translate-y-1.5 -ml-0.5">`;
       const expStr = exp.toString();
       for (let i = 0; i < expStr.length; i++) {
-        html += `<svg class="h-3.5 aspect-[55/90] text-slate-500" viewBox="0 -10 55 90"><use href="#digit-${expStr[i]}" /></svg>`;
+        html += `<svg class="h-3.5 aspect-[55/90] text-slate-400" viewBox="0 -10 55 110"><use href="#digit-${expStr[i]}" /></svg>`;
       }
       html += `</div></div>`;
       return html;
@@ -393,9 +416,9 @@
     // Init UI
     function init() {
       // Build slider static labels in SVG
-      document.getElementById('slider-label-min').innerHTML = createSVGStringHTML('0', 'h-3 text-slate-500');
-      document.getElementById('slider-label-mid').innerHTML = createSVGStringHTML('64', 'h-3 text-slate-500');
-      document.getElementById('slider-label-max').innerHTML = createSVGStringHTML('128', 'h-3 text-slate-500');
+      document.getElementById('slider-label-min').innerHTML = createSVGStringHTML('0', 'h-3 text-slate-400');
+      document.getElementById('slider-label-mid').innerHTML = createSVGStringHTML('64', 'h-3 text-slate-400');
+      document.getElementById('slider-label-max').innerHTML = createSVGStringHTML('128', 'h-3 text-slate-400');
 
       renderPresets();
       setKeySize(64); // Default
@@ -416,8 +439,8 @@
         isPlaying = !isPlaying;
         btnTogglePlay.innerText = isPlaying ? "Pause" : "Play";
         btnTogglePlay.className = isPlaying 
-          ? "flex-1 bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-white"
-          : "flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-750 hover:border-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition text-slate-300";
+          ? "flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition"
+          : "flex-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition";
         if (isPlaying) {
           lastTime = performance.now();
           requestAnimationFrame(loop);
@@ -434,7 +457,7 @@
       requestAnimationFrame(loop);
     }
 
-    // Render Preset buttons dynamically with SVG numbers
+    // Render Preset buttons dynamically with SVG numbers (Light Theme styled)
     function renderPresets() {
       const container = document.getElementById('presets-container');
       const presets = [
@@ -445,19 +468,17 @@
       ];
 
       container.innerHTML = presets.map((p, idx) => {
-        // Render values inside presets
-        const svgVal = createSVGStringHTML(p.valText, 'h-3 text-slate-300');
-        // Extract bit value
+        const svgVal = createSVGStringHTML(p.valText, 'h-3 text-sky-600');
         const bitVal = p.speed.toFixed(1);
-        const svgBits = createSVGStringHTML(bitVal, 'h-3 text-slate-400');
+        const svgBits = createSVGStringHTML(bitVal, 'h-3 text-slate-500');
         
         return `
-          <button onclick="setSpeed(${p.speed})" class="text-left text-xs bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-700 px-3 py-2 rounded-lg text-slate-300 transition">
-            <strong class="block text-[10px] text-slate-500">${p.title}</strong>
+          <button onclick="setSpeed(${p.speed})" class="text-left text-xs bg-white hover:bg-slate-50 border border-slate-200 shadow-sm px-3 py-2 rounded-lg text-slate-800 transition">
+            <strong class="block text-[10px] text-slate-400 font-bold">${p.title}</strong>
             <span class="flex items-center flex-wrap gap-1 mt-0.5">
               ${svgVal} 
-              <span class="text-[10px] text-slate-400 font-sans">${p.unitText.split('(')[0]}</span>
-              <span class="text-[9px] text-slate-500 font-sans flex items-center">
+              <span class="text-[10px] text-slate-500 font-sans">${p.unitText.split('(')[0]}</span>
+              <span class="text-[9px] text-slate-400 font-sans flex items-center">
                 (${svgBits} <span class="ml-0.5">bits</span>)
               </span>
             </span>
@@ -472,7 +493,6 @@
       renderKeySizeButtons();
       buildRegister();
       updateStats();
-      // Reset counter on change to prevent overflow index errors
       scaledCounter = 0n;
       prevBits.fill(null);
     }
@@ -484,10 +504,10 @@
       container.innerHTML = sizes.map(size => {
         const isActive = size === numBits;
         const activeClass = isActive 
-          ? "border-emerald-500/30 bg-emerald-950/50 text-emerald-400 z-10" 
-          : "border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300";
-        const svgSize = createSVGStringHTML(size.toString(), 'h-3 inline-block ' + (isActive ? 'text-emerald-400' : 'text-slate-400'));
-        return `<button type="button" onclick="setKeySize(${size})" id="btn-keysize-${size}" class="px-3 py-1.5 text-xs flex items-center border bg-slate-850 hover:bg-slate-800 transition first:rounded-l-lg last:rounded-r-lg ${activeClass}">
+          ? "border-sky-500/30 bg-sky-50/80 text-sky-600 z-10" 
+          : "border-slate-200 bg-white hover:bg-slate-50 text-slate-600";
+        const svgSize = createSVGStringHTML(size.toString(), 'h-3 inline-block ' + (isActive ? 'text-sky-600' : 'text-slate-400'));
+        return `<button type="button" onclick="setKeySize(${size})" id="btn-keysize-${size}" class="px-3 py-1.5 text-xs flex items-center border transition first:rounded-l-lg last:rounded-r-lg ${activeClass}">
           ${svgSize}<span class="ml-1"> -bit</span>
         </button>`;
       }).join('');
@@ -498,7 +518,17 @@
       registerGrid.innerHTML = '';
       labelsContainer.innerHTML = '';
       
+      // Dynamic spacing: if we have more bits, we allow the container to grow wider (it will scroll)
+      const minColWidth = numBits === 32 ? 30 : (numBits === 64 ? 26 : (numBits === 128 ? 20 : 14));
+      const totalWidth = numBits * minColWidth + 64; // pad on sides
+      
+      const scrollableContent = document.getElementById('scrollable-content');
+      scrollableContent.style.width = `${totalWidth}px`;
+      
+      // Determine label size and frequency to prevent overcrowding
       const labelInterval = numBits <= 32 ? 1 : (numBits <= 64 ? 2 : (numBits <= 128 ? 8 : 16));
+      // Make numbers smaller as bit counts grow
+      const labelHeightClass = numBits <= 32 ? 'h-2.5' : (numBits <= 64 ? 'h-2' : (numBits <= 128 ? 'h-1.8' : 'h-1.5'));
 
       // Loop from MSB to LSB (left to right)
       for (let i = numBits - 1; i >= 0; i--) {
@@ -506,11 +536,12 @@
         col.className = "flex flex-col items-center flex-grow flex-shrink basis-0 h-full justify-between";
         
         const digitWrap = document.createElement('div');
-        digitWrap.className = "w-full h-10 flex items-center justify-center relative";
+        digitWrap.className = "w-full h-12 flex items-center justify-center relative";
         
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('viewBox', '0 -10 45 90');
-        svg.className = 'digit-svg w-full h-full max-h-8 max-w-[28px] val-0';
+        svg.setAttribute('viewBox', '0 -10 55 110'); // Increased height to match shifted down digits
+        // Slightly bigger cap: max-h-12 (48px) and max-w-[32px]
+        svg.className = 'digit-svg w-full h-full max-h-12 max-w-[32px] val-0';
         svg.id = `bit-svg-${i}`;
         
         const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
@@ -525,29 +556,27 @@
 
         // Label Column
         const labelCol = document.createElement('div');
-        labelCol.className = "flex flex-col items-center flex-grow flex-shrink basis-0 text-[10px] select-none text-slate-500 font-mono text-center";
+        labelCol.className = "flex flex-col items-center flex-grow flex-shrink basis-0 text-[10px] select-none text-slate-400 font-mono text-center";
         
-        // Show labels only at specific intervals to prevent overcrowding
+        // Show labels only at specific intervals
         if (i % labelInterval === 0 || i === 0) {
           labelCol.innerHTML = createExponentLabelHTML(i);
 
           // Value vertical representation
           const valStr = formatExponentValue(i);
           const valDiv = document.createElement('div');
-          valDiv.className = "mt-1 opacity-40 hover:opacity-80 transition text-slate-400";
-          valDiv.innerHTML = createVerticalSVGNumberHTML(valStr, 'h-2.5');
+          valDiv.className = "mt-1 opacity-60 hover:opacity-100 transition text-slate-400";
+          valDiv.innerHTML = createVerticalSVGNumberHTML(valStr, labelHeightClass);
           labelCol.appendChild(valDiv);
         } else {
-          // Just a dot/marker
           const dot = document.createElement('div');
-          dot.className = "w-1 h-1 rounded-full bg-slate-800 mt-2";
+          dot.className = "w-1 h-1 rounded-full bg-slate-300 mt-2";
           labelCol.appendChild(dot);
         }
         
         labelsContainer.appendChild(labelCol);
       }
       
-      // Update display initially
       renderBits(0n);
     }
 
@@ -557,7 +586,6 @@
       const val = 1n << BigInt(exp);
       const str = val.toString();
       if (str.length > 15) {
-        // Return shorthand for huge numbers: 1.2E38
         const log10Val = exp * 0.30103;
         const e10 = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - e10);
@@ -589,15 +617,14 @@
 
     // Calculations & Statistics Updates (using SVG inlining)
     function updateStats() {
-      // 1. Guesses/Sec (Large numbers render as scientific notation)
       if (speed < 50) {
         const rate = Math.round(Math.pow(2, speed));
-        statGuessesRate.innerHTML = createSVGStringHTML(rate.toLocaleString(), 'h-7 text-emerald-400');
+        statGuessesRate.innerHTML = createSVGStringHTML(rate.toLocaleString(), 'h-7 text-sky-600');
       } else {
         const log10Val = speed * 0.30102999566398114;
         const exp = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - exp);
-        statGuessesRate.innerHTML = createSVGStringHTML(`${mantissa.toFixed(3)} × 10<sup>${exp}</sup>`, 'h-7 text-emerald-400');
+        statGuessesRate.innerHTML = createSVGStringHTML(`${mantissa.toFixed(3)} × 10<sup>${exp}</sup>`, 'h-7 text-sky-600');
       }
       statBitsExponent.innerHTML = createSVGStringHTML(speed.toFixed(1), 'h-3.5 text-slate-400');
 
@@ -605,17 +632,17 @@
       const logSpace = numBits * 0.30102999566398114;
       const expSpace = Math.floor(logSpace);
       const mantSpace = Math.pow(10, logSpace - expSpace);
-      statKeyspaceSize.innerHTML = createSVGStringHTML(`${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup>`, 'h-5.5 text-slate-100') + ' <span class="text-xs text-slate-400 ml-1">keys</span>';
+      statKeyspaceSize.innerHTML = createSVGStringHTML(`${mantSpace.toFixed(2)} × 10<sup>${expSpace}</sup>`, 'h-5.5 text-slate-800') + ' <span class="text-xs text-slate-400 ml-1">keys</span>';
       statKeyspaceBits.innerHTML = createSVGStringHTML(numBits.toString(), 'h-3.5 text-slate-400');
 
       // 3. Time calculation
       const diffExponent = numBits - speed;
       
-      const timeAvg = formatTimeObj(diffExponent - 1); // 50% search space average
-      statTimeAverage.innerHTML = createSVGStringHTML(timeAvg.val, 'h-6 text-amber-400') + ` <span class="text-xs text-slate-400 ml-1">${timeAvg.unit}</span>`;
+      const timeAvg = formatTimeObj(diffExponent - 1);
+      statTimeAverage.innerHTML = createSVGStringHTML(timeAvg.val, 'h-6 text-amber-600') + ` <span class="text-xs text-slate-500 ml-1 font-sans font-medium">${timeAvg.unit}</span>`;
       
-      const timeFull = formatTimeObj(diffExponent); // 100% search space
-      statTimeFull.innerHTML = createSVGStringHTML(timeFull.val, 'h-4 text-slate-300') + ` <span class="text-[10px] text-slate-500 ml-1 font-sans">${timeFull.unit}</span>`;
+      const timeFull = formatTimeObj(diffExponent);
+      statTimeFull.innerHTML = createSVGStringHTML(timeFull.val, 'h-4 text-slate-500') + ` <span class="text-[10px] text-slate-400 ml-1 font-sans">${timeFull.unit}</span>`;
     }
 
     // Format exponent difference into a value-and-unit object
@@ -623,17 +650,14 @@
       if (exponent < 0) {
         return { val: "< 1", unit: "millisecond" };
       }
-      // If exponent is small enough (under 30), calculate exact seconds
       if (exponent <= 30) {
         const seconds = Math.pow(2, exponent);
         return formatSecondsObj(seconds);
       }
 
-      // Convert larger exponents into Years (1 Year ≈ 2^24.9088 seconds)
       const expYears = exponent - 24.9088;
       const years = Math.pow(2, expYears);
 
-      // Age of the universe ≈ 13.8 billion years ≈ 2^33.68 years
       if (years < 1000) {
         return { val: years.toFixed(1), unit: "years" };
       } else if (years < 1e6) {
@@ -644,7 +668,6 @@
         return { val: (years/1e9).toFixed(1), unit: "billion years" };
       }
 
-      // Beyond: express in Lifetimes of the Universe (13.8 Billion Years = 2^58.593 seconds)
       const expUniverses = exponent - 58.593;
       if (expUniverses < 30) {
         const universes = Math.pow(2, expUniverses);
@@ -653,7 +676,6 @@
           unit: "ages of the universe" 
         };
       } else {
-        // Scientific notation for incredibly vast times
         const log10Val = expUniverses * 0.30103;
         const exp10 = Math.floor(log10Val);
         const mantissa = Math.pow(10, log10Val - exp10);
@@ -680,16 +702,14 @@
     function loop(currentTime) {
       if (!isPlaying) return;
 
-      const dt = (currentTime - lastTime) / 1000; // time in seconds
+      const dt = (currentTime - lastTime) / 1000;
       lastTime = currentTime;
 
-      // Update simulation counter
       if (speed >= 0) {
         const intSpeed = Math.floor(speed);
         const fracSpeed = speed - intSpeed;
         const multiplier = Math.pow(2, fracSpeed);
         
-        // Calculate scaled increment
         const dtUs = BigInt(Math.round(dt * multiplier * 1000000));
         const shiftAmount = BigInt(intSpeed) + SCALE_SHIFT;
         
@@ -701,10 +721,7 @@
         }
       }
 
-      // Convert internal counter to display counter
       const counter = scaledCounter >> SCALE_SHIFT;
-
-      // Render the current bit state
       renderBits(counter);
 
       requestAnimationFrame(loop);
@@ -732,7 +749,7 @@
           
           if (useEl && svgEl) {
             useEl.setAttribute('href', `#digit-${bitVal}`);
-            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-8 max-w-[28px] val-${bitVal} ${isSpinning ? 'spinning' : ''}`);
+            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-12 max-w-[32px] val-${bitVal} ${isSpinning ? 'spinning' : ''}`);
           }
           prevBits[i] = cacheKey;
         }
@@ -745,12 +762,12 @@
 
     function startRepeat(direction) {
       stopRepeat();
-      adjustSpeed(direction); // Initial tap
+      adjustSpeed(direction);
       repeatTimeout = setTimeout(() => {
         repeatInterval = setInterval(() => {
           adjustSpeed(direction);
-        }, 50); // Repeat every 50ms
-      }, 350); // Delay before repeat starts
+        }, 50);
+      }, 350);
     }
 
     function stopRepeat() {
@@ -759,7 +776,6 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      // If editing the input directly, let browser handle the keys
       if (document.activeElement === speedInput) return;
 
       if (e.key === 'ArrowUp') {
