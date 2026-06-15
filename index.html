@@ -24,6 +24,12 @@
       filter: none !important;
       opacity: 1 !important;
     }
+    /* Style for neutral (hex/dec) digits */
+    .val-neutral {
+      fill: #334155; /* slate-700 */
+      color: #334155;
+      filter: none;
+    }
     /* GitHub Corner animation */
     .github-corner:hover .octo-arm {
       animation: octocat-wave 560ms ease-in-out;
@@ -96,6 +102,25 @@
     <g id="digit-9" transform="translate(9, 12)">
       <path d="M30.68,6.54c-11.44-16.33-36.08,1-29.62,18C4.13,32.68,15.54,32,22,29.15A23.32,23.32,0,0,0,36,9.49H30a495.51,495.51,0,0,1-1.25,54.89c-.3,3.85,5.7,3.83,6,0A495.51,495.51,0,0,0,36,9.49c-.13-3.89-5.72-3.83-6,0a16.8,16.8,0,0,1-7.54,12.6c-3.32,2.27-9.74,4.63-13.63,2.31C-.77,18.65,16.41-3.4,25.5,9.57c2.2,3.14,7.4.14,5.18-3Z"/>
     </g>
+    <!-- Hex letters (Stroke-based to keep definitions simple and clean) -->
+    <g id="digit-a" transform="translate(5, 12)">
+      <path d="M7,65 L22,8 L37,65 M12,42 L32,42" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="digit-b" transform="translate(5, 12)">
+      <path d="M9,8 L28,8 C33,8 37,11 37,17 C37,22 33,26 28,26 L9,26 L9,62 L30,62 C35,62 39,58 39,52 C39,46 35,42 30,42 L9,42" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="digit-c" transform="translate(5, 12)">
+      <path d="M36,18 C30,8 14,8 10,25 C6,42 10,59 30,62 C34,62 38,60 40,56" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="digit-d" transform="translate(5, 12)">
+      <path d="M9,8 L26,8 C35,8 39,20 39,35 C39,50 35,62 26,62 L9,62 Z" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="digit-e" transform="translate(5, 12)">
+      <path d="M38,8 L9,8 L9,62 L40,62 M9,35 L33,35" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="digit-f" transform="translate(5, 12)">
+      <path d="M38,8 L9,8 L9,62 M9,35 L33,35" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
     <!-- Custom symbols -->
     <g id="sym-comma">
       <path fill="currentColor" d="M22,60 L28,60 L24,72 L18,72 Z" />
@@ -134,16 +159,31 @@
     <!-- Visualizer Section -->
     <section class="bg-white border border-slate-200 rounded-2xl px-3 py-6 sm:px-4 sm:py-8 shadow-xl">
       
-      <!-- Key Size Selector (Aligned Right) -->
-      <div class="flex items-center justify-end gap-3 mb-6 flex-wrap">
-        <label for="keysize-select" class="text-2xl font-extrabold uppercase tracking-wider text-slate-500">Key Search Space (in bits)</label>
-        <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group">
-          <!-- Dynamic key size buttons with SVG numbers injected here -->
+      <!-- Selector Row: Mode (Left) and Key Size (Right) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
+        <!-- Display Mode Toggle -->
+        <div class="flex items-center gap-3">
+          <span class="text-2xl font-extrabold uppercase tracking-wider text-slate-500">Format</span>
+          <div class="inline-flex rounded-md shadow-sm" role="group">
+            <button type="button" onclick="setDisplayMode('binary')" id="btn-mode-binary" class="px-6 py-3 text-xl font-bold border rounded-l-lg border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition">
+              Binary
+            </button>
+            <button type="button" onclick="setDisplayMode('hex')" id="btn-mode-hex" class="px-6 py-3 text-xl font-bold border-t border-b border-r border-slate-200 bg-white hover:bg-slate-50 text-slate-655 transition">
+              Hex
+            </button>
+            <button type="button" onclick="setDisplayMode('decimal')" id="btn-mode-decimal" class="px-6 py-3 text-xl font-bold border-t border-b border-r border-slate-200 rounded-r-lg bg-white hover:bg-slate-50 text-slate-655 transition">
+              Decimal
+            </button>
+          </div>
         </div>
-        <!-- Equal Sign -->
-        <svg class="h-9 aspect-[55/90] text-slate-400" viewBox="0 -10 55 110"><use href="#sym-eq" /></svg>
-        <!-- Inline Search Space size -->
-        <div id="stat-keyspace-size-inline" class="flex items-center text-slate-800 font-mono" style="height: 48px;"></div>
+
+        <!-- Key Size Selector -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <label for="keysize-select" class="text-2xl font-extrabold uppercase tracking-wider text-slate-500">Key Size</label>
+          <div id="keysize-buttons-container" class="inline-flex rounded-md shadow-sm" role="group"></div>
+          <svg class="h-9 aspect-[55/90] text-slate-400" viewBox="0 -10 55 110"><use href="#sym-eq" /></svg>
+          <div id="stat-keyspace-size-inline" class="flex items-center text-slate-800 font-mono" style="height: 48px;"></div>
+        </div>
       </div>
 
       <!-- Main Register Layout (Fluid width, no scrollbars) -->
@@ -160,13 +200,13 @@
             </div>
 
             <!-- Digits Grid -->
-            <div id="register-grid" class="relative z-10 w-full h-full flex justify-between items-center px-8">
+            <div id="register-grid" class="relative z-10 w-full h-full flex justify-between items-center pl-8 pr-14">
               <!-- Dynamic bit columns will be injected here by JS -->
             </div>
           </div>
 
           <!-- Faint labels below the register (taller layout height) -->
-          <div id="labels-container" class="w-full flex justify-between px-8 h-36 overflow-visible border-t border-slate-200/60 pt-3 pointer-events-none">
+          <div id="labels-container" class="w-full flex justify-between pl-8 pr-14 h-36 overflow-visible border-t border-slate-200/60 pt-3 pointer-events-none">
             <!-- Dynamic exponents and pow of 10 labels injected here -->
           </div>
 
@@ -281,6 +321,13 @@
     let numBits = 64; // Default bits
     let speed = 10;   // Default speed in bits/sec (integer snapped)
     let isPlaying = true;
+    let displayMode = 'binary'; // 'binary', 'hex', 'decimal'
+
+    const alphabets = {
+      binary: ['0', '1'],
+      hex: ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'],
+      decimal: ['0','1','2','3','4','5','6','7','8','9']
+    };
 
     // Simulation math variables
     let lastTime = performance.now();
@@ -359,11 +406,14 @@
       return html;
     }
 
-    // Render an exponent label (e.g. 2^63)
-    function createExponentLabelHTML(exp) {
+    // Render an exponent label (e.g. 2^63 or 10^3)
+    function createExponentLabelHTML(exp, base = 2) {
       let html = `<div class="flex items-start text-slate-400 select-none scale-95 mb-3">`;
-      // Base '2'
-      html += `<svg class="aspect-[55/90] text-slate-400" style="height:48px;" viewBox="0 -10 55 110"><use href="#digit-2" /></svg>`;
+      // Base digits
+      const baseStr = base.toString();
+      for (let i = 0; i < baseStr.length; i++) {
+        html += `<svg class="aspect-[55/90] text-slate-400" style="height:48px;" viewBox="0 -10 55 110"><use href="#digit-${baseStr[i]}" /></svg>`;
+      }
       // Exponent digits
       html += `<div class="flex scale-75 -translate-y-4 -ml-0.5">`;
       const expStr = exp.toString();
@@ -388,6 +438,33 @@
       }
       html += `</div></div>`;
       return html;
+    }
+
+    function setDisplayMode(mode) {
+      displayMode = mode;
+      updateDisplayModeUI();
+      buildRegister();
+      updateStats();
+    }
+
+    function updateDisplayModeUI() {
+      const modes = ['binary', 'hex', 'decimal'];
+      modes.forEach(m => {
+        const btn = document.getElementById(`btn-mode-${m}`);
+        if (m === displayMode) {
+          btn.className = "px-6 py-3 text-xl font-bold border border-sky-500/30 bg-sky-50/80 text-sky-600 z-10 first:rounded-l-lg last:rounded-r-lg";
+        } else {
+          btn.className = "px-6 py-3 text-xl font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition first:rounded-l-lg last:rounded-r-lg";
+        }
+      });
+    }
+
+    function formatDecimalExponentValue(exp) {
+      if (exp === 0) return "1";
+      if (exp < 15) {
+        return Math.pow(10, exp).toLocaleString();
+      }
+      return `1E${exp}`;
     }
 
     // Init UI
@@ -490,75 +567,118 @@
       }).join('');
     }
 
-    // Build DOM elements for each bit
+    // Build DOM elements for each bit/digit column
     function buildRegister() {
       registerGrid.innerHTML = '';
       labelsContainer.innerHTML = '';
-      
-      // Setup dynamic pow10 mapping
-      const pow10Map = {};
-      const maxPower = Math.floor(numBits * 0.30103);
-      const pow10Interval = numBits <= 64 ? 1 : (numBits <= 128 ? 3 : 6);
-      for (let y = pow10Interval; y <= maxPower; y += pow10Interval) {
-        const bitIdx = Math.round(y * 3.321928);
-        if (bitIdx < numBits) {
-          pow10Map[bitIdx] = y;
-        }
+
+      let numCols = numBits;
+      if (displayMode === 'hex') {
+        numCols = Math.ceil(numBits / 4);
+      } else if (displayMode === 'decimal') {
+        numCols = Math.ceil(numBits * 0.30102999566398114);
       }
       
-      const labelInterval = numBits <= 32 ? 2 : (numBits <= 64 ? 4 : (numBits <= 128 ? 8 : 16));
+      // Setup dynamic pow10 mapping
+      const colPow10Map = {};
+      if (displayMode === 'binary') {
+        const maxPower = Math.floor(numBits * 0.30103);
+        const pow10Interval = numBits <= 64 ? 1 : (numBits <= 128 ? 3 : 6);
+        for (let y = pow10Interval; y <= maxPower; y += pow10Interval) {
+          const bitIdx = Math.round(y * 3.321928);
+          if (bitIdx < numBits) {
+            colPow10Map[bitIdx] = y;
+          }
+        }
+      } else if (displayMode === 'hex') {
+        const maxPower = Math.floor(numBits * 0.30103);
+        const pow10Interval = numBits <= 64 ? 1 : (numBits <= 128 ? 3 : 6);
+        for (let y = pow10Interval; y <= maxPower; y += pow10Interval) {
+          const bitIdx = Math.round(y * 3.321928);
+          const hexCol = Math.round(bitIdx / 4);
+          if (hexCol < numCols) {
+            colPow10Map[hexCol] = y;
+          }
+        }
+      }
+
+      // Column label interval settings
+      let labelInterval = 2;
+      if (displayMode === 'binary') {
+        labelInterval = numBits <= 32 ? 2 : (numBits <= 64 ? 4 : (numBits <= 128 ? 8 : 16));
+      } else if (displayMode === 'hex') {
+        labelInterval = numCols <= 8 ? 1 : (numCols <= 16 ? 2 : 4);
+      } else if (displayMode === 'decimal') {
+        labelInterval = numCols <= 10 ? 1 : (numCols <= 20 ? 2 : 4);
+      }
+
+      // Max width class to prevent overlap on small viewports
+      const maxWClass = numCols <= 16 ? 'max-w-[80px]' : (numCols <= 32 ? 'max-w-[60px]' : (numCols <= 64 ? 'max-w-[36px]' : 'max-w-[20px]'));
 
       // Loop from MSB to LSB (left to right)
-      for (let i = numBits - 1; i >= 0; i--) {
+      for (let c = numCols - 1; c >= 0; c--) {
         // 1. Create digit column block for registerGrid (Inside long box)
         const digitCol = document.createElement('div');
         digitCol.className = "flex flex-col items-center flex-grow flex-shrink basis-0 h-full justify-center";
         
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('viewBox', '0 -10 55 110'); // Unified height, Y shifted down inside defs
-        svg.className = 'digit-svg w-full h-full max-h-32 max-w-[80px] val-0';
-        svg.id = `bit-svg-${i}`;
+        svg.className = `digit-svg w-full h-full max-h-32 ${maxWClass} val-0`;
+        svg.id = `bit-svg-${c}`;
         
         const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
         use.setAttribute('href', '#digit-0');
-        use.id = `bit-use-${i}`;
+        use.id = `bit-use-${c}`;
         
         svg.appendChild(use);
         digitCol.appendChild(svg);
         registerGrid.appendChild(digitCol);
 
         // 2. Create label column block for labelsContainer (Outside / below box)
-        // Uses absolute containers with left-1/2 translate-x-1/2 and w-0 to prevent layout distortion at 64+ bits
         const labelCol = document.createElement('div');
         labelCol.className = "group flex-grow flex-shrink basis-0 h-full relative select-none font-mono text-center";
         
         // Row 1: Exponent (Statically visible)
-        if (i % labelInterval === 0 || i === 0) {
+        if (c % labelInterval === 0 || c === 0) {
           const expWrapper = document.createElement('div');
           expWrapper.className = "absolute left-1/2 -translate-x-1/2 w-0 overflow-visible flex justify-center top-0";
-          expWrapper.innerHTML = createExponentLabelHTML(i);
+          if (displayMode === 'binary') {
+            expWrapper.innerHTML = createExponentLabelHTML(c, 2);
+          } else if (displayMode === 'hex') {
+            expWrapper.innerHTML = createExponentLabelHTML(c * 4, 2); // Show bit exponent scale
+          } else if (displayMode === 'decimal') {
+            expWrapper.innerHTML = createExponentLabelHTML(c, 10); // Base 10 exponents
+          }
           labelCol.appendChild(expWrapper);
         }
 
-        // Row 2: 10^K scale marker (Statically visible)
-        if (pow10Map[i] !== undefined) {
+        // Row 2: 10^K scale marker (Statically visible, omitted in decimal mode)
+        if (displayMode !== 'decimal' && colPow10Map[c] !== undefined) {
           const pow10Wrapper = document.createElement('div');
           pow10Wrapper.className = "absolute left-1/2 -translate-x-1/2 w-0 overflow-visible flex justify-center top-[62px]";
-          pow10Wrapper.innerHTML = create10ExponentLabelHTML(pow10Map[i]);
+          pow10Wrapper.innerHTML = create10ExponentLabelHTML(colPow10Map[c]);
           labelCol.appendChild(pow10Wrapper);
         }
 
         // Row 3: Hover Tooltip (Full HORIZONTAL value floats on mouseover)
-        const valStr = formatExponentValue(i);
+        let valStr = "";
+        if (displayMode === 'binary') {
+          valStr = formatExponentValue(c);
+        } else if (displayMode === 'hex') {
+          valStr = formatExponentValue(c * 4);
+        } else if (displayMode === 'decimal') {
+          valStr = formatDecimalExponentValue(c);
+        }
+
         const tooltip = document.createElement('div');
         tooltip.className = "absolute top-[108px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-white border border-slate-200 shadow-xl rounded px-5 py-3.5 z-30 pointer-events-none text-slate-800 font-bold flex items-center";
-        // Rendered as horizontal SVG string!
         tooltip.innerHTML = createSVGStringHTML(valStr, 'h-12 text-slate-800');
         labelCol.appendChild(tooltip);
 
         labelsContainer.appendChild(labelCol);
       }
       
+      prevBits.fill(null);
       renderBits(0n);
     }
 
@@ -709,32 +829,83 @@
       requestAnimationFrame(loop);
     }
 
-    // Render bit SVGs based on counter + randomized spin bits
+    // Render visualizer digit SVGs based on display mode & counter speed limits
     function renderBits(counter) {
-      // Toggling capped at speed - 5 (beyond 2^5 flips/sec, we cap the flicker speed)
-      const blurThreshold = speed - 5;
-      const period = 1000 / 32; // Toggling capped at exactly 32 Hz
+      const alphabet = alphabets[displayMode];
+      const basePeriod = 1000 / 32; // 32 Hz visual cap (31.25ms)
+      
+      let numCols = numBits;
+      if (displayMode === 'hex') {
+        numCols = Math.ceil(numBits / 4);
+      } else if (displayMode === 'decimal') {
+        numCols = Math.ceil(numBits * 0.30102999566398114);
+      }
 
-      for (let i = 0; i < numBits; i++) {
-        let bitVal = 0;
+      for (let c = 0; c < numCols; c++) {
+        let isFlickering = false;
+        let digitVal = '';
 
-        if (i < blurThreshold) {
-          // Instead of blurring, toggle at exactly 32Hz with phase offsets
-          bitVal = (Math.floor((flickerTime + i * 37) / period)) % 2;
-        } else {
-          bitVal = Number((counter >> BigInt(i)) & 1n);
+        if (displayMode === 'binary') {
+          // Binary update frequency: 2^(speed - c)
+          const freq = speed - c;
+          if (freq > 5) { // 2^5 = 32Hz
+            isFlickering = true;
+          }
+          if (isFlickering && isPlaying) {
+            const idx = Math.floor((flickerTime + c * 37) / basePeriod) % 2;
+            digitVal = alphabet[idx];
+          } else {
+            const bit = (counter >> BigInt(c)) & 1n;
+            digitVal = bit.toString();
+          }
+        } 
+        else if (displayMode === 'hex') {
+          // Hex update frequency: 2^(speed - 4c)
+          const freq = speed - 4 * c;
+          if (freq > 5) {
+            isFlickering = true;
+          }
+          if (isFlickering && isPlaying) {
+            const idx = Math.floor((flickerTime + c * 43) / basePeriod) % 16;
+            digitVal = alphabet[idx];
+          } else {
+            const hexDigit = (counter >> BigInt(c * 4)) & 15n;
+            digitVal = alphabet[Number(hexDigit)];
+          }
+        } 
+        else if (displayMode === 'decimal') {
+          // Decimal update frequency: 2^speed / 10^c
+          // speed - c * log2(10) > 5
+          const freq = speed - 3.321928094887362 * c;
+          if (freq > 5) {
+            isFlickering = true;
+          }
+          if (isFlickering && isPlaying) {
+            const idx = Math.floor((flickerTime + c * 47) / basePeriod) % 10;
+            digitVal = alphabet[idx];
+          } else {
+            const decDigit = (counter / (10n ** BigInt(c))) % 10n;
+            digitVal = alphabet[Number(decDigit)];
+          }
         }
 
-        const cacheKey = `bit-${i}-${bitVal}`;
-        if (prevBits[i] !== cacheKey) {
-          const useEl = document.getElementById(`bit-use-${i}`);
-          const svgEl = document.getElementById(`bit-svg-${i}`);
+        const cacheKey = `col-${c}-${digitVal}`;
+        if (prevBits[c] !== cacheKey) {
+          const useEl = document.getElementById(`bit-use-${c}`);
+          const svgEl = document.getElementById(`bit-svg-${c}`);
           
           if (useEl && svgEl) {
-            useEl.setAttribute('href', `#digit-${bitVal}`);
-            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-32 max-w-[80px] val-${bitVal}`);
+            const charId = digitVal.toLowerCase();
+            useEl.setAttribute('href', `#digit-${charId}`);
+            
+            // Set styles (only color binary 0/1, keep others neutral)
+            let classVal = charId;
+            if (displayMode !== 'binary') {
+              classVal = 'neutral';
+            }
+            svgEl.setAttribute('class', `digit-svg w-full h-full max-h-32 val-${classVal}`);
           }
-          prevBits[i] = cacheKey;
+          prevBits[c] = cacheKey;
         }
       }
     }
